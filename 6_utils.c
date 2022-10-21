@@ -1,38 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.h                                     :+:      :+:    :+:   */
+/*   6_utils.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/21 19:13:26 by wmardin          ###   ########.fr       */
+/*   Created: 2022/10/21 18:35:45 by wmardin           #+#    #+#             */
+/*   Updated: 2022/10/21 19:27:16 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSOPHERS_H
+#include "philosophers.h"
 
-# define PHILOSOPHERS_H
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <pthread.h>
-
-typedef struct envelope
+/*
+Checks if the input string is a positive integer.
+*/
+int	ispositiveint(char *input)
 {
-	char	**argv;
-	int		max_eat;
-}	t_envl;
+	int		i;
 
-//0_main.c
-int		main(int argc, char **argv);
-void	setup(t_envl *e, int argc, char **argv);
+	if (input[0] == '0')
+		return (0);
+	i = 1;
+	while (input[i])
+	{
+		if (input[i] < 47 || input[i] > 58)
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
-//6_utils.c
-int		ft_strlen(char *s);
-int		ispositiveint(char *input);
 
-//8_errors.c
-void	error_exit(char *msg);
+int	ft_strlen(char *s)
+{
+	int		i;
 
-#endif
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}

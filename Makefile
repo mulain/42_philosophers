@@ -6,7 +6,7 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/01 20:50:46 by wmardin           #+#    #+#              #
-#    Updated: 2022/10/13 22:00:16 by wmardin          ###   ########.fr        #
+#    Updated: 2022/10/21 18:38:24 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,9 @@ ERRORFLAGS = -Wall -Wextra -Werror
 DEFINE =
 
 NAME =	philosophers
-SRC =	00_main+setup.c\
-		02_utils.c\
-		07_shutdown.c\
-		08_errors.c\
-		09_helperfunctions.c
+SRC =	0_main.c\
+		6_utils.c\
+		8_errors.c
 
 COLOR = \033[94m
 COLOR_END = \033[0m
