@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/22 17:47:23 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/22 22:46:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,24 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <pthread.h>
+# include <sys/time.h>
 
 typedef struct envelope
 {
-	char	**argv;
-	int		n_philo;
-	int		time_die;
-	int		time_eat;
-	int		time_sleep;
-	int		max_eat;
+	int				n_philo;
+	int				time_die;
+	int				time_eat;
+	int				time_sleep;
+	int				max_eat;
+	struct timeval	t;
 }	t_envl;
 
 //0_main.c
 int		main(int argc, char **argv);
 void	setup(t_envl *e, int argc, char **argv);
-void	check_input(t_envl *e, int argc, char **argv);
+void	check_input(int argc, char **argv);
 
 //6_utils.c
-int		ft_strlen(char *s);
 int		ispositiveint(char *input);
 int		ispositiveintorzero(char *input);
 int		ft_atoi(const char *nptr);

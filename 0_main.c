@@ -6,30 +6,16 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/22 21:29:17 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/22 22:49:22 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 /*
-Here are the things you need to know if you want to succeed this assignment:
-• One or more philosophers sit at a round table.
-There is a large bowl of spaghetti in the middle of the table.
-• The philosophers alternatively eat, think, or sleep.
-While they are eating, they are not thinking nor sleeping;
-while thinking, they are not eating nor sleeping;
-and, of course, while sleeping, they are not eating nor thinking.
-• There are also forks on the table. There are as many forks as philosophers.
-• Because serving and eating spaghetti with only one fork is very inconvenient, a
-philosopher takes their right and their left forks to eat, one in each hand.
 • When a philosopher has finished eating, they put their forks back on the table and
 start sleeping. Once awake, they start thinking again. The simulation stops when
 a philosopher dies of starvation.
-• Every philosopher needs to eat and should never starve.
-• Philosophers don’t speak with each other.
-• Philosophers don’t know if another philosopher is about to die.
-• No need to say that philosophers should avoid dying!
 
 • Your(s) program(s) should take the following arguments:
 number_of_philosophers time_to_die time_to_eat time_to_sleep
@@ -74,24 +60,12 @@ with a mutex for each of them.
 */
 
 /*
-argc counter
-1 program name
+eat -> sleep -> think -> eat...
 2 number of philosophers = number of forks (range: 1 to numb of phil)
 3 time to die (ms)
 4 time to eat (2 forks required, left and right of philo)
 5 time to sleep (ms)
 6 (number of times each philosopher must eat)
-	optional, sim stops if all have eaten
-	at least this number of times. if not specified,
-	sim runs til one philo dies
-
-argv counter
-0 program name
-1 number of philosophers = number of forks (range: 1 to numb of phil)
-2 time to die (ms)
-3 time to eat (2 forks required, left and right of philo)
-4 time to sleep (ms)
-5 (number of times each philosopher must eat)
 	optional, sim stops if all have eaten
 	at least this number of times. if not specified,
 	sim runs til one philo dies
@@ -103,15 +77,25 @@ old msg:
 
 int	main(int argc, char **argv)
 {
-	t_envl		e;
+	t_envl				e;
 
 	setup(&e, argc, argv);
+	gettimeofday(&e.t, NULL);
+	printf("tv_sec:%li\n", e.t.tv_sec);
+	printf("tv_usec:%li\n", e.t.tv_usec);
 }
 
 void	setup(t_envl *e, int argc, char **argv)
 {
-	check_input(e, argc, argv);
-	e->argv = argv;
+	check_input(argc, argv);
+	e->n_philo = ft_atoi(argv[1]);
+	e->time_die = ft_atoi(argv[2]);
+	e->time_eat = ft_atoi(argv[3]);
+	e->time_sleep = ft_atoi(argv[4]);
+	if (argc == 6)
+		e->max_eat = ft_atoi(argv[5]);
+	else
+		e->max_eat = -1;
 }
 
 /*
@@ -119,7 +103,7 @@ input:			philo	n_phil	die		eat		sleep	max_eat
 argv_index:		argv_0	argv_1	argv_2	argv_3	argv_4	argv_5
 argc_value:		argc_1	argc_2	argc_3	argc_4	argc_5	argc_6
 */
-void	check_input(t_envl *e, int argc, char **argv)
+void	check_input(int argc, char **argv)
 {
 	int		i;
 
@@ -131,15 +115,7 @@ void	check_input(t_envl *e, int argc, char **argv)
 	while (i < argc)
 	{
 		if (!ispositiveintorzero(argv[i]))
-			error_exit("Only integers >= 0 are valid time / max_eat inputs.");
+			error_exit("Only integers >= 0 are valid for time / max_eat.");
 		i++;
 	}
-	e->n_philo = ft_atoi(argv[1]);
-	e->time_die = ft_atoi(argv[2]);
-	e->time_eat = ft_atoi(argv[3]);
-	e->time_sleep = ft_atoi(argv[4]);
-	if (argc == 6)
-		e->max_eat = ft_atoi(argv[5]);
-	else
-		e->max_eat = -1;
 }

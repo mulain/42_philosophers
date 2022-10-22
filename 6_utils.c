@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:35:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/22 17:45:57 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/22 21:34:32 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,4 @@ int	ft_atoi(const char *nptr)
 		++i;
 	}
 	return (num * sign);
-}
-
-int	ft_strlen(char *s)
-{
-	int		i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
 }
