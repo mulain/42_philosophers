@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/22 17:34:07 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/22 17:57:55 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,22 +110,32 @@ int	main(int argc, char **argv)
 
 void	setup(t_envl *e, int argc, char **argv)
 {
+	check_input(e, argc, argv);
+	e->argv = argv;
+}
+
+/*
+input:			philo	n_phil	die		eat		sleep	max_eat
+argv_index:		argv_0	argv_1	argv_2	argv_3	argv_4	argv_5
+argc_value:		argc_1	argc_2	argc_3	argc_4	argc_5	argc_6
+*/
+void	check_input(t_envl *e, int argc, char **argv)
+{
 	int		i;
 
 	if (argc != 5 && argc != 6)
 		error_exit("Wrong number of arguments.");
-	if (argc == 6)
-		e->max_eat = 1;
-	else
-		e->max_eat = 0;
 	if (!ispositiveint(argv[1]))
 		error_exit("Only positive integers are valid for n_philosophers.");
 	i = 2;
-	while (i < 4 + e->max_eat)
+	while (i < argc)
 	{
 		if (!ispositiveintorzero(argv[i]))
-			error_exit("Only positive integers or 0 are valid time inputs.");
+			error_exit("Only digits are valid time / max_eat inputs.");
 		i++;
 	}
-	e->argv = argv;
+	e->n_philo = ft_atoi(argv[1]);
+	e->time_die = ft_atoi(argv[2]);
+	e->time_eat = ft_atoi(argv[3]);
+	e->time_sleep = ft_atoi(argv[4]);
 }
