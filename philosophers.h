@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/21 19:13:26 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/22 17:22:03 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 typedef struct envelope
 {
 	char	**argv;
+	int		n_philo;
+	int		time_die;
+	int		time_eat;
+	int		time_sleep;
 	int		max_eat;
 }	t_envl;
 
@@ -31,6 +35,7 @@ void	setup(t_envl *e, int argc, char **argv);
 //6_utils.c
 int		ft_strlen(char *s);
 int		ispositiveint(char *input);
+int		ispositiveintorzero(char *input);
 
 //8_errors.c
 void	error_exit(char *msg);

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/21 19:25:11 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/22 17:34:07 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,31 @@ with a mutex for each of them.
 */
 
 /*
-Arguments
+argc counter
 1 program name
 2 number of philosophers = number of forks (range: 1 to numb of phil)
 3 time to die (ms)
 4 time to eat (2 forks required, left and right of philo)
 5 time to sleep (ms)
-6 (number of times each philosopher must eat) optional, sim stops if all have eaten
-at least this number of times. if not specified, sim runs til one philo dies
+6 (number of times each philosopher must eat)
+	optional, sim stops if all have eaten
+	at least this number of times. if not specified,
+	sim runs til one philo dies
+
+argv counter
+0 program name
+1 number of philosophers = number of forks (range: 1 to numb of phil)
+2 time to die (ms)
+3 time to eat (2 forks required, left and right of philo)
+4 time to sleep (ms)
+5 (number of times each philosopher must eat)
+	optional, sim stops if all have eaten
+	at least this number of times. if not specified,
+	sim runs til one philo dies
+
+old msg:
+"Wrong number of arguments.\nFormat:\n./philosophers\
+ n_philosophers time_to_die time_to_eat time_to_sleep (max_eat)"
 */
 
 int	main(int argc, char **argv)
@@ -89,25 +106,25 @@ int	main(int argc, char **argv)
 	t_envl		e;
 
 	setup(&e, argc, argv);
-
 }
 
 void	setup(t_envl *e, int argc, char **argv)
 {
 	int		i;
 
-	if (argc < 5 || argc > 6)
-		error_exit("Wrong number of arguments. Format:\n\
-'./philosophers n_philo, time_to_die, time_to_eat, time_to_sleep, (max_eat)'");
+	if (argc != 5 && argc != 6)
+		error_exit("Wrong number of arguments.");
 	if (argc == 6)
 		e->max_eat = 1;
 	else
 		e->max_eat = 0;
+	if (!ispositiveint(argv[1]))
+		error_exit("Only positive integers are valid for n_philosophers.");
 	i = 2;
-	while (i < 6 + e->max_eat)
+	while (i < 4 + e->max_eat)
 	{
-		if (!ispositiveint(argv[i]))
-			error_exit("Only positive integers are valid as arguments.");
+		if (!ispositiveintorzero(argv[i]))
+			error_exit("Only positive integers or 0 are valid time inputs.");
 		i++;
 	}
 	e->argv = argv;
