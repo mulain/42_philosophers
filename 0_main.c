@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/22 17:57:55 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/22 21:29:17 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,15 @@ void	check_input(t_envl *e, int argc, char **argv)
 	while (i < argc)
 	{
 		if (!ispositiveintorzero(argv[i]))
-			error_exit("Only digits are valid time / max_eat inputs.");
+			error_exit("Only integers >= 0 are valid time / max_eat inputs.");
 		i++;
 	}
 	e->n_philo = ft_atoi(argv[1]);
 	e->time_die = ft_atoi(argv[2]);
 	e->time_eat = ft_atoi(argv[3]);
 	e->time_sleep = ft_atoi(argv[4]);
+	if (argc == 6)
+		e->max_eat = ft_atoi(argv[5]);
+	else
+		e->max_eat = -1;
 }
