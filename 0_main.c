@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/22 22:49:22 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/23 19:08:27 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,41 @@ eat -> sleep -> think -> eat...
 old msg:
 "Wrong number of arguments.\nFormat:\n./philosophers\
  n_philosophers time_to_die time_to_eat time_to_sleep (max_eat)"
+
+ Allowed functions
+memset,
+printf, write,
+malloc, free,
+usleep, gettimeofday,
+pthread_create, pthread_detach, pthread_join,
+pthread_mutex_init, pthread_mutex_destroy, pthread_mutex_lock, pthread_mutex_unlock
 */
+
+void	*philosopher(void *arg)
+{
+	t_envl		*e;
+
+	e = (t_envl *) arg;
+	gettimeofday(&e->t, NULL);
+	printf("tv_sec:%li\n", e->t.tv_sec);
+	printf("tv_usec:%li\n", e->t.tv_usec);
+	printf("ms:%li\n", e->t.tv_usec / 1000);
+	return (NULL);
+}
 
 int	main(int argc, char **argv)
 {
-	t_envl				e;
+	t_envl		e;
+	pthread_t	t1;
+	void		**retval;
 
+	retval = NULL;
 	setup(&e, argc, argv);
-	gettimeofday(&e.t, NULL);
-	printf("tv_sec:%li\n", e.t.tv_sec);
-	printf("tv_usec:%li\n", e.t.tv_usec);
+	if (pthread_create(&t1, NULL, philosopher, &e))
+		error_exit("Error: pthread_create");
+	if (pthread_join(t1, retval))
+		error_exit("Error: pthread_join");
+	printf("cray\n");
 }
 
 void	setup(t_envl *e, int argc, char **argv)
