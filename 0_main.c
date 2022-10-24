@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/24 21:39:40 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/24 21:51:01 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,12 @@ pthread_mutex_init, pthread_mutex_destroy, pthread_mutex_lock, pthread_mutex_unl
 
 void	*philosopher(void *arg)
 {
-	t_envl		*e;
+	t_philo		*e;
 
-	e = (t_envl *) arg;
+	e = (t_philo *) arg;
+	pthread_mutex_lock(&e->print);
+	printf("n_philo:%i\n", e->name);
+	pthread_mutex_unlock(&e->print);
 	gettimeofday(&e->t, NULL);
 	printf("tv_sec:%li\n", e->t.tv_sec);
 	printf("tv_usec:%li\n", e->t.tv_usec);
@@ -101,16 +104,22 @@ int	main(int argc, char **argv)
 	int			i;
 
 	setup(&e, argc, argv);
-	printf("n_philo:%i\n", e.n_philo);
 	i = 0;
 	while (i < e.n_philo)
 	{
-		if (pthread_create(e.threads + i, NULL, philosopher, &e))
+		if (pthread_create(e.threads + i, NULL, philosopher,
+				&e.philostructs[i]))
 			error_exit("Error: pthread_create");
 		i++;
 	}
-	if (pthread_join(e.threads[0], NULL))
-		error_exit("Error: pthread_join");
+	i = 0;
+	while (i < e.n_philo)
+	{
+		printf("i:%i\n", i);
+		if (pthread_join(e.threads[i], NULL))
+			error_exit("Error: pthread_join");
+		i++;
+	}
 	printf("cray\n");
 }
 

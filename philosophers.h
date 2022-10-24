@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/24 21:30:47 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/24 21:44:59 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct philostruct
 	pthread_mutex_t		print;
 	pthread_mutex_t		fork_n;
 	pthread_mutex_t		fork_n_minus1;
+	struct timeval		t;
 }	t_philo;
 
 typedef struct envelope
