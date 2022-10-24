@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/24 13:01:04 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/24 21:39:40 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,19 +116,26 @@ int	main(int argc, char **argv)
 
 void	setup(t_envl *e, int argc, char **argv)
 {
-	int		i;
+	int			i;
 
 	check_input(argc, argv);
 	parse_input(e, argc, argv);
-	e->threads = malloc(e->n_philo * sizeof(pthread_t));
 	pthread_mutex_init(&e->print, NULL);
 	e->forks = malloc(e->n_philo * sizeof(pthread_mutex_t));
+	e->philostructs = malloc(e->n_philo * sizeof(t_philo));
 	i = 0;
 	while (i < e->n_philo)
 	{
 		pthread_mutex_init(e->forks + i, NULL);
 		i++;
 	}
+	i = 0;
+	while (i < e->n_philo)
+	{
+		set_philostruct(e, i);
+		i++;
+	}
+	e->threads = malloc(e->n_philo * sizeof(pthread_t));
 }
 
 /*
@@ -163,4 +170,19 @@ void	parse_input(t_envl *e, int argc, char **argv)
 		e->max_eat = ft_atoi(argv[5]);
 	else
 		e->max_eat = -1;
+}
+
+void	set_philostruct(t_envl *e, int i)
+{
+	e->philostructs[i].name = i + 1;
+	e->philostructs[i].time_die = e->time_die;
+	e->philostructs[i].time_eat = e->time_eat;
+	e->philostructs[i].time_sleep = e->time_sleep;
+	e->philostructs[i].max_eat = e->max_eat;
+	e->philostructs[i].print = e->print;
+	e->philostructs[i].fork_n = e->forks[i];
+	if (i != 0)
+		e->philostructs[i].fork_n_minus1 = e->forks[i - 1];
+	else
+		e->philostructs[i].fork_n_minus1 = e->forks[e->n_philo];
 }
