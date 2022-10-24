@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/23 19:08:27 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/24 12:07:04 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,15 +112,19 @@ int	main(int argc, char **argv)
 
 void	setup(t_envl *e, int argc, char **argv)
 {
+	int		i;
+
 	check_input(argc, argv);
-	e->n_philo = ft_atoi(argv[1]);
-	e->time_die = ft_atoi(argv[2]);
-	e->time_eat = ft_atoi(argv[3]);
-	e->time_sleep = ft_atoi(argv[4]);
-	if (argc == 6)
-		e->max_eat = ft_atoi(argv[5]);
-	else
-		e->max_eat = -1;
+	parse_input(e, argc, argv);
+	e->philothreads = malloc(e->n_philo * sizeof(pthread_t));
+	pthread_mutex_init(&e->print, NULL);
+	e->forks = malloc(e->n_philo * sizeof(pthread_mutex_t));
+	i = 0;
+	while (i < e->n_philo)
+	{
+		pthread_mutex_init(e->forks + i, NULL);
+		i++;
+	}
 }
 
 /*
@@ -143,4 +147,16 @@ void	check_input(int argc, char **argv)
 			error_exit("Only integers >= 0 are valid for time / max_eat.");
 		i++;
 	}
+}
+
+void	parse_input(t_envl *e, int argc, char **argv)
+{
+	e->n_philo = ft_atoi(argv[1]);
+	e->time_die = ft_atoi(argv[2]);
+	e->time_eat = ft_atoi(argv[3]);
+	e->time_sleep = ft_atoi(argv[4]);
+	if (argc == 6)
+		e->max_eat = ft_atoi(argv[5]);
+	else
+		e->max_eat = -1;
 }
