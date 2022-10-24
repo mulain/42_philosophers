@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/24 12:07:04 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/24 13:01:04 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,14 +98,18 @@ void	*philosopher(void *arg)
 int	main(int argc, char **argv)
 {
 	t_envl		e;
-	pthread_t	t1;
-	void		**retval;
+	int			i;
 
-	retval = NULL;
 	setup(&e, argc, argv);
-	if (pthread_create(&t1, NULL, philosopher, &e))
-		error_exit("Error: pthread_create");
-	if (pthread_join(t1, retval))
+	printf("n_philo:%i\n", e.n_philo);
+	i = 0;
+	while (i < e.n_philo)
+	{
+		if (pthread_create(e.threads + i, NULL, philosopher, &e))
+			error_exit("Error: pthread_create");
+		i++;
+	}
+	if (pthread_join(e.threads[0], NULL))
 		error_exit("Error: pthread_join");
 	printf("cray\n");
 }
@@ -116,7 +120,7 @@ void	setup(t_envl *e, int argc, char **argv)
 
 	check_input(argc, argv);
 	parse_input(e, argc, argv);
-	e->philothreads = malloc(e->n_philo * sizeof(pthread_t));
+	e->threads = malloc(e->n_philo * sizeof(pthread_t));
 	pthread_mutex_init(&e->print, NULL);
 	e->forks = malloc(e->n_philo * sizeof(pthread_mutex_t));
 	i = 0;

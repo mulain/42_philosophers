@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/24 12:06:01 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/24 12:35:46 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ typedef struct envelope
 	int					time_eat;
 	int					time_sleep;
 	int					max_eat;
-	pthread_t			*philothreads;
+	int					philo_index;
+	int					*philonumbers;
+	pthread_t			*threads;
 	pthread_mutex_t		print;
 	pthread_mutex_t		*forks;
 	struct timeval		t;
