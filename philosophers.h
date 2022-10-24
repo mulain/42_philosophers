@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/24 21:44:59 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/24 22:44:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ typedef struct philostruct
 	int					max_eat;
 	int					starttime;
 	pthread_mutex_t		print;
-	pthread_mutex_t		fork_n;
-	pthread_mutex_t		fork_n_minus1;
+	pthread_mutex_t		*fork_right;
+	pthread_mutex_t		*fork_left;
 	struct timeval		t;
 }	t_philo;
 
@@ -50,10 +50,17 @@ typedef struct envelope
 
 //0_main.c
 int		main(int argc, char **argv);
+
+//1_setup.c
 void	setup(t_envl *e, int argc, char **argv);
 void	check_input(int argc, char **argv);
 void	parse_input(t_envl *e, int argc, char **argv);
 void	set_philostruct(t_envl *e, int i);
+
+//2_threadfunctions.c
+void	*philosopher(void *arg);
+void	taken_a_fork(int timestamp, int name, pthread_mutex_t *print);
+void	is_eating(int timestamp, int name, pthread_mutex_t *print);
 
 //6_utils.c
 int		ispositiveint(char *input);

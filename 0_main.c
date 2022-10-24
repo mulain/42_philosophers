@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/24 21:51:01 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/24 22:06:38 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,21 +83,6 @@ pthread_create, pthread_detach, pthread_join,
 pthread_mutex_init, pthread_mutex_destroy, pthread_mutex_lock, pthread_mutex_unlock
 */
 
-void	*philosopher(void *arg)
-{
-	t_philo		*e;
-
-	e = (t_philo *) arg;
-	pthread_mutex_lock(&e->print);
-	printf("n_philo:%i\n", e->name);
-	pthread_mutex_unlock(&e->print);
-	gettimeofday(&e->t, NULL);
-	printf("tv_sec:%li\n", e->t.tv_sec);
-	printf("tv_usec:%li\n", e->t.tv_usec);
-	printf("ms:%li\n", e->t.tv_usec / 1000);
-	return (NULL);
-}
-
 int	main(int argc, char **argv)
 {
 	t_envl		e;
@@ -115,83 +100,9 @@ int	main(int argc, char **argv)
 	i = 0;
 	while (i < e.n_philo)
 	{
-		printf("i:%i\n", i);
 		if (pthread_join(e.threads[i], NULL))
 			error_exit("Error: pthread_join");
 		i++;
 	}
 	printf("cray\n");
-}
-
-void	setup(t_envl *e, int argc, char **argv)
-{
-	int			i;
-
-	check_input(argc, argv);
-	parse_input(e, argc, argv);
-	pthread_mutex_init(&e->print, NULL);
-	e->forks = malloc(e->n_philo * sizeof(pthread_mutex_t));
-	e->philostructs = malloc(e->n_philo * sizeof(t_philo));
-	i = 0;
-	while (i < e->n_philo)
-	{
-		pthread_mutex_init(e->forks + i, NULL);
-		i++;
-	}
-	i = 0;
-	while (i < e->n_philo)
-	{
-		set_philostruct(e, i);
-		i++;
-	}
-	e->threads = malloc(e->n_philo * sizeof(pthread_t));
-}
-
-/*
-input:			philo	n_phil	die		eat		sleep	max_eat
-argv_index:		argv_0	argv_1	argv_2	argv_3	argv_4	argv_5
-argc_value:		argc_1	argc_2	argc_3	argc_4	argc_5	argc_6
-*/
-void	check_input(int argc, char **argv)
-{
-	int		i;
-
-	if (argc != 5 && argc != 6)
-		error_exit("Wrong number of arguments.");
-	if (!ispositiveint(argv[1]))
-		error_exit("Only positive integers are valid for n_philosophers.");
-	i = 2;
-	while (i < argc)
-	{
-		if (!ispositiveintorzero(argv[i]))
-			error_exit("Only integers >= 0 are valid for time / max_eat.");
-		i++;
-	}
-}
-
-void	parse_input(t_envl *e, int argc, char **argv)
-{
-	e->n_philo = ft_atoi(argv[1]);
-	e->time_die = ft_atoi(argv[2]);
-	e->time_eat = ft_atoi(argv[3]);
-	e->time_sleep = ft_atoi(argv[4]);
-	if (argc == 6)
-		e->max_eat = ft_atoi(argv[5]);
-	else
-		e->max_eat = -1;
-}
-
-void	set_philostruct(t_envl *e, int i)
-{
-	e->philostructs[i].name = i + 1;
-	e->philostructs[i].time_die = e->time_die;
-	e->philostructs[i].time_eat = e->time_eat;
-	e->philostructs[i].time_sleep = e->time_sleep;
-	e->philostructs[i].max_eat = e->max_eat;
-	e->philostructs[i].print = e->print;
-	e->philostructs[i].fork_n = e->forks[i];
-	if (i != 0)
-		e->philostructs[i].fork_n_minus1 = e->forks[i - 1];
-	else
-		e->philostructs[i].fork_n_minus1 = e->forks[e->n_philo];
 }
