@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/24 22:06:38 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/25 16:38:46 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	main(int argc, char **argv)
 
 	setup(&e, argc, argv);
 	i = 0;
-	while (i < e.n_philo)
+	while (i < e.n_philosophers)
 	{
 		if (pthread_create(e.threads + i, NULL, philosopher,
 				&e.philostructs[i]))
@@ -98,7 +98,7 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	i = 0;
-	while (i < e.n_philo)
+	while (i < e.n_philosophers)
 	{
 		if (pthread_join(e.threads[i], NULL))
 			error_exit("Error: pthread_join");
