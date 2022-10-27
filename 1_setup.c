@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/27 17:43:42 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/27 18:48:53 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,31 +42,64 @@ void	check_input(int argc, char **argv)
 	}
 }
 
-void	parse_input(t_envl *e, int argc, char **argv)
+/*
+Checks whether the input string represents a positive integer.
+*/
+int	is_positiveint(char *input)
 {
-	e->n_philosophers = ft_atoi(argv[1]);
-	e->info->time_to_die = ft_atoi(argv[2]);
-	e->info->time_to_eat = ft_atoi(argv[3]);
-	e->info->time_to_sleep = ft_atoi(argv[4]);
-	if (argc == 6)
-		e->info->max_eat = ft_atoi(argv[5]);
-	else
-		e->info->max_eat = -1;
-}
+	int		i;
 
-void	set_philostruct(t_envl *e, int i)
-{
+	if (input[0] == '0')
+		return (0);
 	i = 0;
-	e->philostructs = malloc(e->n_philosophers * sizeof(t_philo));
-	while (i < e->n_philosophers)
+	while (input[i])
 	{
-		e->philostructs[i].id = i + 1;
-		e->philostructs->info = e->info;
-		e->philostructs[i].fork_right = e->forks + i;
-		if (!i)
-			e->philostructs[i].fork_left = e->forks + e->n_philosophers;
-		else
-			e->philostructs[i].fork_left = e->forks + i - 1;
+		if (input[i] < 47 || input[i] > 58)
+			return (0);
 		i++;
 	}
+	return (1);
+}
+
+/*
+Checks whether the input string represents a positive integer or 0.
+*/
+int	is_positiveintorzero(char *input)
+{
+	int		i;
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] < 47 || input[i] > 58)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	is_intsize(char *argv)
+{
+	int		len;
+
+	len = ft_strlen(argv);
+	if (len > 11)
+		return (0);
+	if (argv[0] == '-')
+	{
+		if (len == 11)
+		{
+			if (ft_strncmp("-2147483648", argv, 69) < 0)
+				return (0);
+		}
+		return (1);
+	}
+	if (len == 11)
+		return (0);
+	if (len == 10)
+	{
+		if (ft_strncmp("2147483647", argv, 420) < 0)
+			return (0);
+	}
+	return (1);
 }

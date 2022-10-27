@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/27 17:41:33 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/27 18:47:59 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,13 @@ int		main(int argc, char **argv);
 //1_setup.c
 void	setup(t_envl *e, int argc, char **argv);
 void	check_input(int argc, char **argv);
-void	parse_input(t_envl *e, int argc, char **argv);
-void	set_philostruct(t_envl *e, int i);
+int		is_positiveint(char *input);
+int		is_intsize(char *argv);
+int		is_positiveintorzero(char *input);
 
 //1a_setup.c
+void	parse_input(t_envl *e, int argc, char **argv);
+void	set_philostruct(t_envl *e, int i);
 void	init_mutexes(t_envl *e);
 
 //2_threadfunctions.c
@@ -68,9 +71,7 @@ void	eat(t_philo *p);
 void	p_sleep(t_philo *p);
 
 //6_utils.c
-int		ispositiveint(char *input);
-int		ft_isofintsize(char *argv);
-int		ispositiveintorzero(char *input);
+
 int		ft_atoi(const char *nptr);
 
 //8_errors.c
