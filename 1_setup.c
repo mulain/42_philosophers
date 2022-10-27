@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/25 16:35:13 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/27 17:43:42 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ void	check_input(int argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 		error_exit("Wrong number of arguments.");
-	if (!ispositiveint(argv[1]))
-		error_exit("Only positive integers are valid for n_philosophers.");
+	if (!ispositiveint(argv[1]) || !isofintsize(argv[1]))
+		error_exit("Only positive ints are valid for n_philosophers.");
 	i = 2;
 	while (i < argc)
 	{
-		if (!ispositiveintorzero(argv[i]))
-			error_exit("Only integers >= 0 are valid for time / max_eat.");
+		if (!ispositiveintorzero(argv[i]) || !isofintsize(argv[1]))
+			error_exit("Only ints >= 0 are valid for time / max_eat.");
 		i++;
 	}
 }

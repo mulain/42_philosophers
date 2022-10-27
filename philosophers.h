@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/27 17:11:48 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/27 17:41:33 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	p_sleep(t_philo *p);
 
 //6_utils.c
 int		ispositiveint(char *input);
+int		ft_isofintsize(char *argv);
 int		ispositiveintorzero(char *input);
 int		ft_atoi(const char *nptr);
 

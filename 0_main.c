@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/27 17:25:08 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/27 17:33:14 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	main(int argc, char **argv)
 		if (pthread_create(e.threads + i, NULL, philosopher,
 				&e.philostructs[i]))
 			error_exit("Error: pthread_create");
+		printf("hello i:%i\n", i);
 		i++;
 	}
 	i = 0;
