@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/25 16:46:51 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/27 17:11:48 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ typedef struct philostruct
 {
 	int					id;
 	t_common			*info;
-	time_t				timestamp;
 	pthread_mutex_t		*fork_right;
 	pthread_mutex_t		*fork_left;
 }	t_philo;
@@ -61,8 +60,12 @@ void	init_mutexes(t_envl *e);
 
 //2_threadfunctions.c
 void	*philosopher(void *arg);
-void	taken_a_fork(int timestamp, int name, pthread_mutex_t *print);
-void	is_eating(int timestamp, int name, pthread_mutex_t *print);
+void	take_fork_right(t_philo *p);
+void	take_fork_left(t_philo *p);
+void	broadcast(time_t timestamp, char *msg);
+time_t	get_timestamp(time_t starttime);
+void	eat(t_philo *p);
+void	p_sleep(t_philo *p);
 
 //6_utils.c
 int		ispositiveint(char *input);

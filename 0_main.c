@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/25 16:38:46 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/27 17:25:08 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,10 @@ malloc, free,
 usleep, gettimeofday,
 pthread_create, pthread_detach, pthread_join,
 pthread_mutex_init, pthread_mutex_destroy, pthread_mutex_lock, pthread_mutex_unlock
+
+
+implement isofintsize check
+
 */
 
 int	main(int argc, char **argv)
