@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 19:37:58 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/28 20:58:07 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,7 @@ void	*philosopher(void *arg);
 void	wait_start(t_philo *p);
 void	take_fork_right(t_philo *p);
 void	take_fork_left(t_philo *p);
-void	eat(t_philo *p);
-void	p_sleep(t_philo *p);
+void	eat_and_sleep(t_philo *p);
 
 //6_utils.c
 time_t	get_timestamp(time_t starttime);

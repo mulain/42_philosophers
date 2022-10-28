@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 20:47:54 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/28 20:57:39 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*philosopher(void *arg)
 	wait_start(p);
 	take_fork_right(p);
 	take_fork_left(p);
-	eat(p);
+	eat_and_sleep(p);
 	return (NULL);
 }
 
@@ -56,16 +56,27 @@ void	take_fork_left(t_philo *p)
 		get_time_ms() - p->common->starttime, p->id);
 }
 
-void	eat(t_philo *p)
+void	eat_and_sleep(t_philo *p)
 {
 	time_t		currenttime;
+	time_t		timestamp;
 	time_t		activity_end;
 
 	currenttime = get_time_ms();
-	printf("%li %i is eating\n", currenttime - p->common->starttime, p->id);
+	timestamp = currenttime - p->common->starttime;
+	printf("%li %i is eating\n", timestamp, p->id);
 	activity_end = currenttime + (time_t)(p->common->time_to_eat);
 	while (get_time_ms() < activity_end)
 		usleep(10);
 	pthread_mutex_unlock(p->fork_right);
 	pthread_mutex_unlock(p->fork_left);
+	currenttime = get_time_ms();
+	timestamp = currenttime - p->common->starttime;
+	printf("%li %i is sleeping\n", timestamp, p->id);
+	activity_end = currenttime + (time_t)(p->common->time_to_sleep);
+	while (get_time_ms() < activity_end)
+		usleep(10);
+	currenttime = get_time_ms();
+	timestamp = currenttime - p->common->starttime;
+	printf("%li %i is thinking\n", timestamp, p->id);
 }
