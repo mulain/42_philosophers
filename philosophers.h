@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/27 18:47:59 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/28 12:48:49 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void	setup(t_envl *e, int argc, char **argv);
 void	check_input(int argc, char **argv);
 int		is_positiveint(char *input);
 int		is_intsize(char *argv);
-int		is_positiveintorzero(char *input);
+int		is_digits(char *input);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 
 //1a_setup.c
 void	parse_input(t_envl *e, int argc, char **argv);

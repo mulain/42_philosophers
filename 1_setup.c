@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/27 18:48:53 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/28 12:58:48 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,30 +31,43 @@ void	check_input(int argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 		error_exit("Wrong number of arguments.");
-	if (!ispositiveint(argv[1]) || !isofintsize(argv[1]))
-		error_exit("Only positive ints are valid for n_philosophers.");
+	if (!is_positiveint(argv[1]) || !is_intsize(argv[1]))
+		error_exit("Only ints >0 are valid for n_philosophers.");
 	i = 2;
 	while (i < argc)
 	{
-		if (!ispositiveintorzero(argv[i]) || !isofintsize(argv[1]))
-			error_exit("Only ints >= 0 are valid for time / max_eat.");
+		if (!is_digits(argv[i]) || !is_intsize(argv[1]))
+			error_exit("Only ints >= 0 are valid for times / max_eat.");
 		i++;
 	}
 }
 
 /*
-Checks whether the input string represents a positive integer.
+Checks whether the input string consists of only digits; digits must
+represent a number > 0. Leading 0s are allowed, e.g. 001.
 */
 int	is_positiveint(char *input)
 {
 	int		i;
+	int		nonzero;
 
+	i = 0;
+	nonzero = 0;
 	if (input[0] == '0')
-		return (0);
+	{
+		while (input[i])
+		{
+			if (input[i] != '0')
+				nonzero = 1;
+			i++;
+		}
+		if (!nonzero)
+			return (0);
+	}
 	i = 0;
 	while (input[i])
 	{
-		if (input[i] < 47 || input[i] > 58)
+		if (input[i] < '0' || input[i] > '9')
 			return (0);
 		i++;
 	}
@@ -62,34 +75,36 @@ int	is_positiveint(char *input)
 }
 
 /*
-Checks whether the input string represents a positive integer or 0.
+Checks whether the input string consists of only digits.
 */
-int	is_positiveintorzero(char *input)
+int	is_digits(char *input)
 {
 	int		i;
 
 	i = 0;
 	while (input[i])
 	{
-		if (input[i] < 47 || input[i] > 58)
+		if (input[i] < '0' || input[i] > '9')
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-int	is_intsize(char *argv)
+int	is_intsize(char *string)
 {
 	int		len;
 
-	len = ft_strlen(argv);
+	len = 0;
+	while (string[len])
+		len++;
 	if (len > 11)
 		return (0);
-	if (argv[0] == '-')
+	if (string[0] == '-')
 	{
 		if (len == 11)
 		{
-			if (ft_strncmp("-2147483648", argv, 69) < 0)
+			if (ft_strncmp("-2147483648", string, 69) < 0)
 				return (0);
 		}
 		return (1);
@@ -98,8 +113,28 @@ int	is_intsize(char *argv)
 		return (0);
 	if (len == 10)
 	{
-		if (ft_strncmp("2147483647", argv, 420) < 0)
+		if (ft_strncmp("2147483647", string, 420) < 0)
 			return (0);
 	}
 	return (1);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t			i;
+	unsigned char	*u_s1;
+	unsigned char	*u_s2;
+
+	i = 0;
+	u_s1 = (unsigned char *) s1;
+	u_s2 = (unsigned char *) s2;
+	while (i < n)
+	{
+		if (u_s1[i] == 0 && u_s2[i] == 0)
+			return (0);
+		if (u_s1[i] != u_s2[i])
+			return (u_s1[i] - u_s2[i]);
+		i++;
+	}
+	return (0);
 }
