@@ -6,33 +6,23 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:35:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/27 18:41:11 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/28 17:41:59 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	ft_atoi(const char *nptr)
+time_t	get_timestamp(time_t starttime)
 {
-	int	i;
-	int	sign;
-	int	num;
+	struct timeval		time;
+	time_t				currenttime_ms;
 
-	i = 0;
-	num = 0;
-	sign = 1;
-	while (nptr[i] == 32 || (nptr[i] > 8 && nptr[i] < 14))
-		++i;
-	if (nptr[i] == 45 || nptr[i] == 43)
-	{
-		if (nptr[i] == 45)
-			sign = -1;
-		++i;
-	}
-	while (nptr[i] > 47 && nptr[i] < 58)
-	{
-		num = num * 10 + (nptr[i] - 48);
-		++i;
-	}
-	return (num * sign);
+	gettimeofday(&time, NULL);
+	currenttime_ms = time.tv_sec * 1000 + time.tv_usec / 1000;
+	return (currenttime_ms - starttime);
+}
+
+void	broadcast(time_t timestamp, char *msg)
+{
+	printf("%li %i %s\n", timestamp, 420, msg);
 }

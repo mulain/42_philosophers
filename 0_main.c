@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/27 17:33:14 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/28 20:38:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,25 @@ pthread_create, pthread_detach, pthread_join,
 pthread_mutex_init, pthread_mutex_destroy, pthread_mutex_lock, pthread_mutex_unlock
 
 
-implement isofintsize check
+implenet retarded start time
 
 */
 
 int	main(int argc, char **argv)
 {
 	t_envl		e;
+	t_common	common;
 	int			i;
 
+	e.common = &common;
 	setup(&e, argc, argv);
+	e.common->starttime = get_time_ms() + 10 * e.n_philosophers;
 	i = 0;
 	while (i < e.n_philosophers)
 	{
 		if (pthread_create(e.threads + i, NULL, philosopher,
 				&e.philostructs[i]))
 			error_exit("Error: pthread_create");
-		printf("hello i:%i\n", i);
 		i++;
 	}
 	i = 0;
@@ -110,4 +112,12 @@ int	main(int argc, char **argv)
 		i++;
 	}
 	printf("cray\n");
+}
+
+time_t	get_time_ms(void)
+{
+	struct timeval		time;
+
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
