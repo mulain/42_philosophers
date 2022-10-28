@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 20:57:39 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/28 21:00:40 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	eat_and_sleep(t_philo *p)
 	pthread_mutex_unlock(p->fork_left);
 	currenttime = get_time_ms();
 	timestamp = currenttime - p->common->starttime;
+	p->last_eat = currenttime;
 	printf("%li %i is sleeping\n", timestamp, p->id);
 	activity_end = currenttime + (time_t)(p->common->time_to_sleep);
 	while (get_time_ms() < activity_end)
