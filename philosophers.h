@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 16:28:51 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:48:26 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ bool	wait_timetarget(time_t timetarget, t_philo *p);
 //6_utils.c
 time_t	get_timestamp(time_t starttime);
 
+//7_shutdown.c
+void	shutdown(t_envl *e);
 
 //8_errors.c
 void	error_exit(char *msg);

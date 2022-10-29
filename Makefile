@@ -6,7 +6,7 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/01 20:50:46 by wmardin           #+#    #+#              #
-#    Updated: 2022/10/29 15:48:54 by wmardin          ###   ########.fr        #
+#    Updated: 2022/10/29 23:47:57 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC =	0_main.c\
 		3_thread_monitor.c\
 		4_thread_utils.c\
 		6_utils.c\
+		7_shutdown.c\
 		8_errors.c
 
 COLOR = \033[94m

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 16:58:03 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:47:42 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int	main(int argc, char **argv)
 	}
 	if (pthread_join(e.monitor, NULL))
 		error_exit("Error: pthread_join");
+	shutdown(&e);
 }
 
 time_t	get_time_ms(void)

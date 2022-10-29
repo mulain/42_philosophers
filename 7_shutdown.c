@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 11:40:17 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 19:48:24 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:47:30 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,16 @@
 
 void	shutdown(t_envl *e)
 {
-	/*
-	Mutexes
-		- mutex print (not really)
-		- forks
-	allocs:
-		- fork array
-		- thread array
-		- t_philo arary
-	*/
+	int		i;
+
+	free(e->forks);
+	free(e->threads);
+	free(e->philostructs);
+	pthread_mutex_destroy(&e->common.printlock);
+	i = 0;
+	while (i < e->n_philosophers)
+	{
+		pthread_mutex_destroy(&e->forks[i]);
+		i++;
+	}
 }
