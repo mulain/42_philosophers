@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 12:49:04 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 16:10:39 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 17:00:36 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	calc_thinktime(t_envl *e)
 
 	freetime = e->common.time_to_die - e->common.time_to_eat
 		- e->common.time_to_sleep;
-	e->common.time_to_think = freetime * 0.8;
+	e->common.time_to_think = freetime - 10;
 	if (e->common.time_to_think < 0)
 		e->common.time_to_think = 0;
 	printf("time_to_die:%i\n", e->common.time_to_die);

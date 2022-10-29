@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 16:29:27 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 17:48:25 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	*philosopher(void *arg)
 		take_forks(p);
 		eat_sleep_think(p);
 	}
+	printf("%i times eaten: %i\n", p->id, p->times_eaten);
 	return (NULL);
 }
 
@@ -38,8 +39,6 @@ void	take_forks(t_philo *p)
 }
 
 /*
-Doesn't actually have to return a variable, just has to return at the
-checkpoints. Kept it for now, might delete to void later.
 wait_timetarget returns the value of the bool "stopped". So if it is true,
 the simulation has stopped and the routine must be canceled.
 */
