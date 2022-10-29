@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 12:52:10 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 14:35:41 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <stdbool.h>
 
 # define MSG_ARG_COUNT "Wrong number of arguments. Usage:\n\
 ./philosophers <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> \
@@ -34,6 +35,7 @@ typedef struct common
 	int					time_to_sleep;
 	int					times_to_eat;
 	int					time_to_think;
+	bool				stop;
 	time_t				starttime;
 	pthread_mutex_t		printlock;
 }	t_common;
@@ -78,12 +80,14 @@ int		ft_atoi(const char *nptr);
 //1_setup_3.c
 void	calc_thinktime(t_envl *e);
 
-//2_threadfunctions.c
+//2_threadfunctions_1.c
 void	*philosopher(void *arg);
 void	wait_start(t_philo *p);
 void	take_fork_right(t_philo *p);
 void	take_fork_left(t_philo *p);
-void	eat_and_sleep(t_philo *p);
+void	eat_sleep_think(t_philo *p);
+
+//2_threadfunctions_2.c
 time_t	broadcast(char *msg, t_philo *p);
 
 //6_utils.c
