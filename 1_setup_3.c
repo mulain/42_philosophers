@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   6_utils.c                                          :+:      :+:    :+:   */
+/*   1_setup_3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/21 18:35:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 12:22:17 by wmardin          ###   ########.fr       */
+/*   Created: 2022/10/29 12:49:04 by wmardin           #+#    #+#             */
+/*   Updated: 2022/10/29 12:52:52 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-time_t	get_timestamp(time_t starttime)
+void	calc_thinktime(t_envl *e)
 {
-	struct timeval		time;
-	time_t				currenttime_ms;
-
-	gettimeofday(&time, NULL);
-	currenttime_ms = time.tv_sec * 1000 + time.tv_usec / 1000;
-	return (currenttime_ms - starttime);
+	e->common.time_to_think = 0;
 }

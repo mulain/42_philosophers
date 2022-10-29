@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 21:00:40 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 12:44:55 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,11 @@ void	*philosopher(void *arg)
 	t_philo		*p;
 
 	p = (t_philo *) arg;
-	if (p->common->max_eat == 0)
+	if (p->common->times_to_eat == 0)
 		return (NULL);
 	p->last_eat = p->common->starttime;
 	wait_start(p);
+	while (p->times_eaten < p->common->times_to_eat)
 	take_fork_right(p);
 	take_fork_left(p);
 	eat_and_sleep(p);
@@ -45,7 +46,7 @@ void	wait_start(t_philo *p)
 void	take_fork_right(t_philo *p)
 {
 	pthread_mutex_lock(p->fork_right);
-	printf("%ld %d has taken a fork\n",
+	printf("%li %i has taken a fork\n",
 		get_time_ms() - p->common->starttime, p->id);
 }
 
@@ -58,26 +59,30 @@ void	take_fork_left(t_philo *p)
 
 void	eat_and_sleep(t_philo *p)
 {
-	time_t		currenttime;
-	time_t		timestamp;
-	time_t		activity_end;
+	time_t		now;
 
-	currenttime = get_time_ms();
-	timestamp = currenttime - p->common->starttime;
-	printf("%li %i is eating\n", timestamp, p->id);
-	activity_end = currenttime + (time_t)(p->common->time_to_eat);
-	while (get_time_ms() < activity_end)
+	now = broadcast("is eating", p);
+	p->last_eat = now;
+	p->times_eaten++;
+	while (get_time_ms() < now + p->common->time_to_eat)
 		usleep(10);
 	pthread_mutex_unlock(p->fork_right);
 	pthread_mutex_unlock(p->fork_left);
-	currenttime = get_time_ms();
-	timestamp = currenttime - p->common->starttime;
-	p->last_eat = currenttime;
-	printf("%li %i is sleeping\n", timestamp, p->id);
-	activity_end = currenttime + (time_t)(p->common->time_to_sleep);
-	while (get_time_ms() < activity_end)
+	now = broadcast("is sleeping", p);
+	while (get_time_ms() < now + p->common->time_to_sleep)
 		usleep(10);
-	currenttime = get_time_ms();
-	timestamp = currenttime - p->common->starttime;
-	printf("%li %i is thinking\n", timestamp, p->id);
+	now = broadcast("is thinking", p);
+	while (get_time_ms() < now + p->common->time_to_think)
+		usleep(10);
+}
+
+time_t	broadcast(char *msg, t_philo *p)
+{
+	time_t		now;
+
+	pthread_mutex_lock(&p->common->printlock);
+	now = get_time_ms();
+	printf("%li %i %s\n", now - p->common->starttime, p->id, msg);
+	pthread_mutex_unlock(&p->common->printlock);
+	return (now);
 }

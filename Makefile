@@ -6,7 +6,7 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/01 20:50:46 by wmardin           #+#    #+#              #
-#    Updated: 2022/10/28 13:54:42 by wmardin          ###   ########.fr        #
+#    Updated: 2022/10/29 12:49:42 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,9 @@ DEFINE =
 
 NAME =	philosophers
 SRC =	0_main.c\
-		1_setup.c\
-		1a_setup_util.c\
+		1_setup_1.c\
+		1_setup_2.c\
+		1_setup_3.c\
 		2_threadfunctions.c\
 		6_utils.c\
 		8_errors.c
