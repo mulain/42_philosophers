@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 22:50:51 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 16:58:03 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	main(int argc, char **argv)
 
 	setup(&e, argc, argv);
 	i = 0;
+	pthread_create(&e.monitor, NULL, monitor, &e);
 	while (i < e.n_philosophers)
 	{
 		if (pthread_create(e.threads + i, NULL, philosopher,
@@ -108,7 +109,8 @@ int	main(int argc, char **argv)
 			error_exit("Error: pthread_join");
 		i++;
 	}
-	printf("cray\n");
+	if (pthread_join(e.monitor, NULL))
+		error_exit("Error: pthread_join");
 }
 
 time_t	get_time_ms(void)

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 14:35:41 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 16:28:51 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct envelope
 {
 	int					n_philosophers;
 	pthread_t			*threads;
+	pthread_t			monitor;
 	pthread_mutex_t		*forks;
 	t_common			common;
 	t_philo				*philostructs;
@@ -80,15 +81,18 @@ int		ft_atoi(const char *nptr);
 //1_setup_3.c
 void	calc_thinktime(t_envl *e);
 
-//2_threadfunctions_1.c
+//2_thread_philosopher.c
 void	*philosopher(void *arg);
-void	wait_start(t_philo *p);
-void	take_fork_right(t_philo *p);
-void	take_fork_left(t_philo *p);
+void	take_forks(t_philo *p);
 void	eat_sleep_think(t_philo *p);
+void	release_forks(t_philo *p);
 
-//2_threadfunctions_2.c
+//3_thread_monitor.c
+void	*monitor(void *arg);
+
+//4_thread_utils.c
 time_t	broadcast(char *msg, t_philo *p);
+bool	wait_timetarget(time_t timetarget, t_philo *p);
 
 //6_utils.c
 time_t	get_timestamp(time_t starttime);

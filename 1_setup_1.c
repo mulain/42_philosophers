@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 12:56:43 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 15:12:54 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	setup(t_envl *e, int argc, char **argv)
 	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
 	calc_thinktime(e);
 	e->common.starttime = get_time_ms() + 1000;
+	e->common.stop = false;
 	set_philostructs(e);
 }
 
