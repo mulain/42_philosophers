@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   2_threadfunctions_2.c                              :+:      :+:    :+:   */
+/*   4_thread_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 14:35:10 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 15:34:04 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:31:13 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ time_t	broadcast(char *msg, t_philo *p)
 bool	wait_timetarget(time_t timetarget, t_philo *p)
 {
 	while (get_time_ms() < timetarget && !p->common->stop)
-		usleep(10);
-	if (!p->common->stop)
-		return (false);
+	{
+		if (!p->common->stop)
+			return (false);
+		usleep(100);
+	}
 	return (true);
 }

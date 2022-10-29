@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 17:48:25 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:27:08 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,21 @@
 
 void	*philosopher(void *arg)
 {
-	t_philo		*p;
+	t_philo			*p;
+	pthread_mutex_t	*temp;
 
 	p = (t_philo *) arg;
 	if (wait_timetarget(p->common->starttime, p))
 		return (NULL);
+	if (p->id == 1)
+		usleep(100);
 	if (p->id % 2 == 0)
-		usleep(200);
+	{
+		usleep(500);
+		temp = p->fork_left;
+		p->fork_left = p->fork_right;
+		p->fork_right = temp;
+	}
 	while (!p->common->stop)
 	{
 		take_forks(p);
