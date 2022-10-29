@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 14:35:10 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 23:31:13 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 23:49:11 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	wait_timetarget(time_t timetarget, t_philo *p)
 	{
 		if (!p->common->stop)
 			return (false);
-		usleep(100);
+		usleep(10);
 	}
 	return (true);
 }
