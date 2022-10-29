@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 20:02:35 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 11:38:01 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	setup(t_envl *e, int argc, char **argv)
 	init_mutexes(e);
 	set_philostructs(e);
 	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
+	e->common.starttime = get_time_ms() + 1000;
 }
 
 /*
@@ -31,27 +32,27 @@ void	check_input(int argc, char **argv)
 	int		i;
 
 	if (argc != 5 && argc != 6)
-		error_exit("Wrong number of arguments.");
+		error_exit(MSG_ARG_COUNT);
 	if (!is_positivenum(argv[1]) || !is_intsize(argv[1]))
-		error_exit("Only ints >0 are valid for n_philosophers.");
+		error_exit(MSG_NUMBER_PHIL);
 	i = 2;
 	while (i < argc)
 	{
-		if (!is_digits(argv[i]) || !is_intsize(argv[1]))
-			error_exit("Only ints >= 0 are valid for times / max_eat.");
+		if (!is_digits(argv[i]) || !is_intsize(argv[i]))
+			error_exit(MSG_TIMES);
 		i++;
 	}
 }
 
 void	parse_input(t_envl *e, int argc, char **argv)
 {
-	e->common->time_to_die = ft_atoi(argv[2]);
-	e->common->time_to_eat = ft_atoi(argv[3]);
-	e->common->time_to_sleep = ft_atoi(argv[4]);
+	e->common.time_to_die = ft_atoi(argv[2]);
+	e->common.time_to_eat = ft_atoi(argv[3]);
+	e->common.time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		e->common->max_eat = ft_atoi(argv[5]);
+		e->common.max_eat = ft_atoi(argv[5]);
 	else
-		e->common->max_eat = -1;
+		e->common.max_eat = -1;
 	e->n_philosophers = ft_atoi(argv[1]);
 }
 
@@ -83,7 +84,7 @@ void	set_philostructs(t_envl *e)
 	while (i < e->n_philosophers)
 	{
 		e->philostructs[i].id = i + 1;
-		e->philostructs[i].common = e->common;
+		e->philostructs[i].common = &e->common;
 		e->philostructs[i].fork_right = &e->forks[i];
 		if (i == 0)
 			e->philostructs[i].fork_left = &e->forks[e->n_philosophers - 1];

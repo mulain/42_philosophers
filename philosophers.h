@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 20:58:07 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/29 11:39:30 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
+
+# define MSG_ARG_COUNT "Wrong number of arguments. Usage:\n\
+./philosophers <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> \
+[<number_of_times_each_philosopher_must_eat>]"
+# define MSG_NUMBER_PHIL "<number_of_philosophers> must be a positive integer in \
+int range: > 0 and < 2147483648."
+# define MSG_TIMES "<time_to_[...]> and <number_of_times_each_philosopher_must_eat> \
+must be positive integers in int range or zero: >= 0  and < 2147483648."
 
 typedef struct common
 {
@@ -44,7 +52,7 @@ typedef struct envelope
 	int					n_philosophers;
 	pthread_t			*threads;
 	pthread_mutex_t		*forks;
-	t_common			*common;
+	t_common			common;
 	t_philo				*philostructs;
 }	t_envl;
 

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/28 20:38:35 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/28 22:50:51 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,9 @@ implenet retarded start time
 int	main(int argc, char **argv)
 {
 	t_envl		e;
-	t_common	common;
 	int			i;
 
-	e.common = &common;
 	setup(&e, argc, argv);
-	e.common->starttime = get_time_ms() + 10 * e.n_philosophers;
 	i = 0;
 	while (i < e.n_philosophers)
 	{
