@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 18:50:27 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 22:31:44 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	setup(t_envl *e, int argc, char **argv)
 	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
 	if (!e->threads)
 		exec_error_exit("Error: malloc", e);
-	e->common.time_to_think = calc_thinktime(e);
+	//e->common.time_to_think = 0;
 	offset = e->n_philosophers * 20;
 	if (offset > 1000)
 		offset = 1000;

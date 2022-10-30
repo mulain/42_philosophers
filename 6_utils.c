@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:35:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 21:38:10 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 22:30:31 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ bool	wait_timetarget(time_t timetarget, t_philo *p)
 	return (stopped);
 }
 
-int	calc_thinktime(t_envl *e)
+int	calc_thinktime_old(t_envl *e)
 {
 	int		freetime;
 	int		thinktime;
@@ -71,10 +71,29 @@ int	calc_thinktime(t_envl *e)
 	return (thinktime);
 }
 
+int	calc_thinktime(t_philo *p)
+{
+	int		remaining_time;
+	int		time_to_think;
+
+	pthread_mutex_lock(p->last_eat_lock);
+	remaining_time = p->common->time_to_die - get_time_ms() + p->last_eat
+		/* - p->common->time_to_eat */;
+	time_to_think = remaining_time * 0.5;
+	if (time_to_think < 0)
+		time_to_think = 0;
+	if (time_to_think > 200)
+		time_to_think = 200;
+	printf("remaining time:%i\n", remaining_time);
+	printf("thinktime:%i\n", time_to_think);
+	return (time_to_think);
+}
+
 bool	check_stopped(pthread_mutex_t *stoplock, bool *stop)
 {
 	bool	stopped;
 
+	//clean vars, now all calling functions can pass same struct
 	pthread_mutex_lock(stoplock);
 	stopped = *stop;
 	pthread_mutex_unlock(stoplock);

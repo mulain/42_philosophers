@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 18:35:01 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 22:07:49 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	set_stop(t_envl *e);
 time_t	get_time_ms(void);
 time_t	broadcast(char *msg, t_philo *p);
 bool	wait_timetarget(time_t timetarget, t_philo *p);
-int		calc_thinktime(t_envl *e);
+int		calc_thinktime(t_philo *p);
 bool	check_stopped(pthread_mutex_t *stoplock, bool *stopsignal);
 
 //7_shutdown.c

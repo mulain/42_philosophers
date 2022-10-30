@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 21:38:38 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 22:43:54 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	*philosopher(void *arg)
 	}
 	if (p->id % 2 == 0)
 	{
-		usleep(1000);
+		usleep(calc_thinktime(p));
 		temp = p->fork_left;
 		p->fork_left = p->fork_right;
 		p->fork_right = temp;
@@ -86,7 +86,7 @@ void	eat_sleep_think(t_philo *p)
 	time_t		now;
 	bool		stopped;
 
-	if (p->common->stop)
+	if (check_stopped(&p->common->stoplock, &p->common->stop))
 	{
 		release_forks(p);
 		return ;
@@ -104,8 +104,7 @@ void	eat_sleep_think(t_philo *p)
 	if (wait_timetarget(now + p->common->time_to_sleep, p))
 		return ;
 	now = broadcast("is thinking", p);
-	if (wait_timetarget(now + p->common->time_to_think, p))
-		return ;
+	wait_timetarget(now + calc_thinktime(p), p);
 }
 
 void	release_forks(t_philo *p)
