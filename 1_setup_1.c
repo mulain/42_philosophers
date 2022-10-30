@@ -6,24 +6,40 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 15:12:54 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 13:48:03 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 /*
-initstruct function?
+Checks input.
+Initializes variables relevant to shutdown functions. These guard the shutdown
+processes (free, mutex destroy) in case of termination before their targets
+have been populated.
 */
 void	setup(t_envl *e, int argc, char **argv)
 {
+	int		offset;
+
 	check_input(argc, argv);
 	parse_input(e, argc, argv);
-	init_mutexes(e);
+	e->threads = NULL;
+	e->forks = NULL;
+	e->mutex_init = false;
+	e->philostructs = NULL;
 	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
-	calc_thinktime(e);
-	e->common.starttime = get_time_ms() + 1000;
+	if (!e->threads)
+		exec_error_exit("Error: malloc", e);
+	e->common.time_to_think = calc_thinktime(e);
+	offset = e->n_philosophers * 20;
+	if (offset > 1000)
+		offset = 1000;
+	if (offset < 100)
+		offset = 100;
+	e->common.starttime = get_time_ms() + offset;
 	e->common.stop = false;
+	init_mutexes(e);
 	set_philostructs(e);
 }
 
@@ -37,14 +53,14 @@ void	check_input(int argc, char **argv)
 	int		i;
 
 	if (argc != 5 && argc != 6)
-		error_exit(MSG_ARG_COUNT);
-	if (!is_positivenum(argv[1]) || !is_intsize(argv[1]))
-		error_exit(MSG_NUMBER_PHIL);
+		input_error_exit(MSG_ARG_COUNT);
+	if (!is_one_to_maxphilo(argv[1]))
+		input_error_philo_exit(MSG_NUMBER_PHIL);
 	i = 2;
 	while (i < argc)
 	{
 		if (!is_digits(argv[i]) || !is_intsize(argv[i]))
-			error_exit(MSG_TIMES);
+			input_error_exit(MSG_TIMES);
 		i++;
 	}
 }
@@ -66,13 +82,18 @@ void	init_mutexes(t_envl *e)
 	int		i;
 
 	e->forks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
+	if (!e->forks)
+		exec_error_exit("Error: malloc", e);
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-		pthread_mutex_init(&e->forks[i], NULL);
+		if (pthread_mutex_init(&e->forks[i], NULL))
+			exec_error_exit("Error: pthread_mutex_init", e);
 		i++;
 	}
-	pthread_mutex_init(&e->common.printlock, NULL);
+	if (pthread_mutex_init(&e->common.printlock, NULL))
+		exec_error_exit("Error: pthread_mutex_init", e);
+	e->mutex_init = true;
 }
 
 void	set_philostructs(t_envl *e)
@@ -81,6 +102,8 @@ void	set_philostructs(t_envl *e)
 
 	i = 0;
 	e->philostructs = malloc(e->n_philosophers * sizeof(t_philo));
+	if (!e->philostructs)
+		exec_error_exit("Error: malloc", e);
 	while (i < e->n_philosophers)
 	{
 		e->philostructs[i].id = i + 1;

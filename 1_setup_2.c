@@ -6,41 +6,23 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 16:22:47 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 12:49:01 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 13:43:44 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-/*
-Checks whether the input string consists of only digits; digits must
-represent a number > 0. Leading 0s are allowed, e.g. 001.
-*/
-int	is_positivenum(char *input)
+int	is_one_to_maxphilo(char *input)
 {
-	int		i;
-	int		nonzero;
+	int		num;
 
-	i = 0;
-	nonzero = 0;
-	if (input[0] == '0')
-	{
-		while (input[i])
-		{
-			if (input[i] != '0')
-				nonzero = 1;
-			i++;
-		}
-		if (!nonzero)
-			return (0);
-	}
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] < '0' || input[i] > '9')
-			return (0);
-		i++;
-	}
+	if (!is_digits(input))
+		return (0);
+	if (!is_intsize(input))
+		return (0);
+	num = ft_atoi(input);
+	if (num < 1 || num > MAX_PHILO)
+		return (0);
 	return (1);
 }
 
@@ -61,6 +43,11 @@ int	is_digits(char *input)
 	return (1);
 }
 
+/*
+Checks whether the input string corresponds to a number in int range.
+The usually following conversion of the string to an int using ft_atoi
+would have unwanted behavior in case of an input > INT_MAX.
+*/
 int	is_intsize(char *string)
 {
 	int		len;
@@ -118,11 +105,11 @@ int	ft_atoi(const char *nptr)
 	i = 0;
 	num = 0;
 	sign = 1;
-	while (nptr[i] == 32 || (nptr[i] > 8 && nptr[i] < 14))
+	while (nptr[i] == ' ' || (nptr[i] > 8 && nptr[i] < 14))
 		++i;
-	if (nptr[i] == 45 || nptr[i] == 43)
+	if (nptr[i] == '+' || nptr[i] == '-')
 	{
-		if (nptr[i] == 45)
+		if (nptr[i] == '-')
 			sign = -1;
 		++i;
 	}

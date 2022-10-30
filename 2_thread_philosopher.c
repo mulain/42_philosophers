@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/29 23:27:08 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 13:22:19 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ void	*philosopher(void *arg)
 	pthread_mutex_t	*temp;
 
 	p = (t_philo *) arg;
-	if (wait_timetarget(p->common->starttime, p))
-		return (NULL);
+	wait_timetarget(p->common->starttime, p);
 	if (p->id == 1)
 		usleep(100);
 	if (p->id % 2 == 0)
 	{
-		usleep(500);
+		usleep(1000);
 		temp = p->fork_left;
 		p->fork_left = p->fork_right;
 		p->fork_right = temp;
@@ -35,6 +34,20 @@ void	*philosopher(void *arg)
 		eat_sleep_think(p);
 	}
 	printf("%i times eaten: %i\n", p->id, p->times_eaten);
+	return (NULL);
+}
+
+void	*philosopher_solo(void *arg)
+{
+	t_philo			*p;
+
+	p = (t_philo *) arg;
+	wait_timetarget(p->common->starttime, p);
+	pthread_mutex_lock(p->fork_right);
+	broadcast("has taken a fork", p);
+	//pthread_mutex_unlock(p->fork_right);
+	while (!p->common->stop)
+		usleep(100);
 	return (NULL);
 }
 
