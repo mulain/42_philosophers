@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:35:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 18:59:59 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 21:38:10 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ time_t	get_time_ms(void)
 }
 
 /*
-printf itself doesn't require a mutex guard. The mutex is to prevent a call with
-a higher timestamp from being printed before a call with a lower timestamp.
+printf itself doesn't require a mutex guard in order for its printing to not be
+interrupted by another print. The mutex is to prevent a call with a higher
+timestamp from being printed before a call with a lower timestamp.
 Only prints if the simulation hasn't been stopped. Allowed functions don't permit
 killing of threads, so they have to be prevented from printing before they can
 themselves check whether the sim has stopped and terminate of their own accord.
@@ -39,14 +40,6 @@ time_t	broadcast(char *msg, t_philo *p)
 	return (now);
 }
 
-/*
-while (get_time_ms() < timetarget && !p->common->stop)
-	usleep(10);
-pthread_mutex_lock(&p->common->stoplock);
-stopped = p->common->stop;
-pthread_mutex_unlock(&p->common->stoplock);
-return (stopped);
-*/
 bool	wait_timetarget(time_t timetarget, t_philo *p)
 {
 	bool	stopped;
@@ -78,12 +71,12 @@ int	calc_thinktime(t_envl *e)
 	return (thinktime);
 }
 
-bool	check_stopped(pthread_mutex_t *stoplock, bool *stopsignal)
+bool	check_stopped(pthread_mutex_t *stoplock, bool *stop)
 {
 	bool	stopped;
 
 	pthread_mutex_lock(stoplock);
-	stopped = *stopsignal;
+	stopped = *stop;
 	pthread_mutex_unlock(stoplock);
 	return (stopped);
 }
