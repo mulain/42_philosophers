@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 13:48:03 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 18:50:27 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,18 +80,23 @@ void	parse_input(t_envl *e, int argc, char **argv)
 void	init_mutexes(t_envl *e)
 {
 	int		i;
+	int		mutex_init_return;
 
+	mutex_init_return = 0;
 	e->forks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
-	if (!e->forks)
+	e->last_eat_locks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
+	if (!e->forks || !e->last_eat_locks)
 		exec_error_exit("Error: malloc", e);
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-		if (pthread_mutex_init(&e->forks[i], NULL))
-			exec_error_exit("Error: pthread_mutex_init", e);
+		mutex_init_return += pthread_mutex_init(&e->forks[i], NULL);
+		mutex_init_return += pthread_mutex_init(&e->last_eat_locks[i], NULL);
 		i++;
 	}
-	if (pthread_mutex_init(&e->common.printlock, NULL))
+	mutex_init_return += pthread_mutex_init(&e->common.printlock, NULL);
+	mutex_init_return += pthread_mutex_init(&e->common.stoplock, NULL);
+	if (mutex_init_return)
 		exec_error_exit("Error: pthread_mutex_init", e);
 	e->mutex_init = true;
 }
@@ -114,6 +119,7 @@ void	set_philostructs(t_envl *e)
 		else
 			e->philostructs[i].fork_left = &e->forks[i - 1];
 		e->philostructs[i].last_eat = e->common.starttime;
+		e->philostructs[i].last_eat_lock = &e->last_eat_locks[i];
 		e->philostructs[i].times_eaten = 0;
 		i++;
 	}

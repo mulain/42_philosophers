@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:35:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 11:59:26 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 18:59:59 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,31 @@ time_t	broadcast(char *msg, t_philo *p)
 
 	pthread_mutex_lock(&p->common->printlock);
 	now = get_time_ms();
-	if (!p->common->stop)
+	if (!check_stopped(&p->common->stoplock, &p->common->stop))
 		printf("%li %i %s\n", now - p->common->starttime, p->id, msg);
 	pthread_mutex_unlock(&p->common->printlock);
 	return (now);
 }
 
+/*
+while (get_time_ms() < timetarget && !p->common->stop)
+	usleep(10);
+pthread_mutex_lock(&p->common->stoplock);
+stopped = p->common->stop;
+pthread_mutex_unlock(&p->common->stoplock);
+return (stopped);
+*/
 bool	wait_timetarget(time_t timetarget, t_philo *p)
 {
-	while (get_time_ms() < timetarget && !p->common->stop)
-		usleep(10);
-	if (p->common->stop)
-		return (true);
-	return (false);
+	bool	stopped;
+
+	stopped = false;
+	while (get_time_ms() < timetarget && !stopped)
+	{
+		usleep(100);
+		stopped = check_stopped(&p->common->stoplock, &p->common->stop);
+	}
+	return (stopped);
 }
 
 int	calc_thinktime(t_envl *e)
@@ -62,6 +74,16 @@ int	calc_thinktime(t_envl *e)
 	printf("time_to_eat:%i\n", e->common.time_to_eat);
 	printf("time_to_sleep:%i\n", e->common.time_to_sleep);
 	printf("free time:%i\n", freetime);
-	printf("thinktime:%i\n", e->common.time_to_think);
+	printf("thinktime:%i\n", thinktime);
 	return (thinktime);
+}
+
+bool	check_stopped(pthread_mutex_t *stoplock, bool *stopsignal)
+{
+	bool	stopped;
+
+	pthread_mutex_lock(stoplock);
+	stopped = *stopsignal;
+	pthread_mutex_unlock(stoplock);
+	return (stopped);
 }

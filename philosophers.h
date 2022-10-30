@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 13:12:14 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/30 18:35:01 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct common
 	bool				stop;
 	time_t				starttime;
 	pthread_mutex_t		printlock;
+	pthread_mutex_t		stoplock;
 }	t_common;
 
 typedef struct philostruct
@@ -47,6 +48,7 @@ typedef struct philostruct
 	pthread_mutex_t		*fork_right;
 	pthread_mutex_t		*fork_left;
 	time_t				last_eat;
+	pthread_mutex_t		*last_eat_lock;
 	int					times_eaten;
 }	t_philo;
 
@@ -56,6 +58,7 @@ typedef struct envelope
 	pthread_t			*threads;
 	pthread_t			monitor;
 	pthread_mutex_t		*forks;
+	pthread_mutex_t		*last_eat_locks;
 	t_common			common;
 	bool				mutex_init;
 	t_philo				*philostructs;
@@ -89,12 +92,16 @@ void	release_forks(t_philo *p);
 
 //3_thread_monitor.c
 void	*monitor(void *arg);
+bool	check_death(t_envl *e, int i);
+bool	check_sated(t_envl *e, int i);
+void	set_stop(t_envl *e);
 
 //6_utils.c
 time_t	get_time_ms(void);
 time_t	broadcast(char *msg, t_philo *p);
 bool	wait_timetarget(time_t timetarget, t_philo *p);
 int		calc_thinktime(t_envl *e);
+bool	check_stopped(pthread_mutex_t *stoplock, bool *stopsignal);
 
 //7_shutdown.c
 void	shutdown(t_envl *e);
