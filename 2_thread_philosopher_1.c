@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/31 12:58:48 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/31 16:23:27 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	eat_sleep_think(t_philo *p)
 /*
 Philosophers die if they don't start eating time_to_die after starting their
 last meal. The remaining time therefore is <time_to_die> - <time elapsed since
-last meal>.
+last meal> (= current_time - last_eat).
 Uneven philosophers are supposed to eat first - but the even ones have to eat
 after them without dying. So their remaining time is decreased by <time_to_eat>
 for the time they need to eat before they can give the forks to the other
@@ -103,9 +103,9 @@ int	calc_thinktime(t_philo *p)
 	pthread_mutex_lock(p->last_eat_lock);
 	remaining_time = p->common->time_to_die - get_time_ms() + p->last_eat;
 	pthread_mutex_unlock(p->last_eat_lock);
-	if (p->id % 2 == 1)
-		remaining_time -= p->common->time_to_eat;
-	time_to_think = remaining_time - 1;
+	/* if (p->id % 2 == 1)
+		remaining_time -= p->common->time_to_eat; */
+	time_to_think = remaining_time + 0.5;
 	/* if (time_to_think < 0)
 		time_to_think = 0; */
 	/* if (time_to_think > 200)
