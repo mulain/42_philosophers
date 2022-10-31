@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 22:07:49 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/31 12:59:12 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct common
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					times_to_eat;
-	int					time_to_think;
+	//int					time_to_think;
 	bool				stop;
 	time_t				starttime;
 	pthread_mutex_t		printlock;
@@ -48,6 +48,7 @@ typedef struct philostruct
 	pthread_mutex_t		*fork_right;
 	pthread_mutex_t		*fork_left;
 	time_t				last_eat;
+	time_t				death_time;
 	pthread_mutex_t		*last_eat_lock;
 	int					times_eaten;
 }	t_philo;
@@ -61,13 +62,14 @@ typedef struct envelope
 	pthread_mutex_t		*last_eat_locks;
 	t_common			common;
 	bool				mutex_init;
-	t_philo				*philostructs;
+	t_philo				*pstructs;
 }	t_envl;
 
 //0_main.c
 int		main(int argc, char **argv);
 void	launch_threads(t_envl *e);
 void	collect_threads(t_envl *e);
+time_t	get_time_ms(void);
 
 //1_setup_1.c
 void	setup(t_envl *e, int argc, char **argv);
@@ -83,12 +85,19 @@ int		is_intsize(char *argv);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_atoi(const char *nptr);
 
-//2_thread_philosopher.c
+//2_thread_philosopher_1.c
 void	*philosopher(void *arg);
-void	*philosopher_solo(void *arg);
-void	take_forks(t_philo *p);
 void	eat_sleep_think(t_philo *p);
+int		calc_thinktime(t_philo *p);
+bool	wait_timetarget(time_t timetarget, t_philo *p);
+void	*philosopher_solo(void *arg);
+
+//2_thread_philosopher_2.c
+void	switch_forks(t_philo *p);
+void	take_forks(t_philo *p);
 void	release_forks(t_philo *p);
+bool	check_stopped(t_philo *p);
+time_t	broadcast(char *msg, t_philo *p);
 
 //3_thread_monitor.c
 void	*monitor(void *arg);
@@ -97,11 +106,6 @@ bool	check_sated(t_envl *e, int i);
 void	set_stop(t_envl *e);
 
 //6_utils.c
-time_t	get_time_ms(void);
-time_t	broadcast(char *msg, t_philo *p);
-bool	wait_timetarget(time_t timetarget, t_philo *p);
-int		calc_thinktime(t_philo *p);
-bool	check_stopped(pthread_mutex_t *stoplock, bool *stopsignal);
 
 //7_shutdown.c
 void	shutdown(t_envl *e);

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 11:46:40 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/31 12:57:56 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ void	launch_threads(t_envl *e)
 		exec_error_exit("Error: pthread_create", e);
 	if (e->n_philosophers == 1)
 		threadfunction = philosopher_solo;
+	//cleanup philofunction assifnment to setup? ALso init struct in stup?
 	else
 		threadfunction = philosopher;
 	i = 0;
 	while (i < e->n_philosophers)
 	{
 		if (pthread_create(e->threads + i, NULL, threadfunction,
-				&e->philostructs[i]))
+				&e->pstructs[i]))
 			exec_error_exit("Error: pthread_create", e);
 		i++;
 	}
@@ -65,4 +66,12 @@ void	collect_threads(t_envl *e)
 	}
 	if (pthread_join(e->monitor, NULL))
 		exec_error_exit("Error: pthread_join", e);
+}
+
+time_t	get_time_ms(void)
+{
+	struct timeval		time;
+
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }

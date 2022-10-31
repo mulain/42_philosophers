@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 22:31:44 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/10/31 08:23:37 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	setup(t_envl *e, int argc, char **argv)
 	e->threads = NULL;
 	e->forks = NULL;
 	e->mutex_init = false;
-	e->philostructs = NULL;
+	e->pstructs = NULL;
 	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
 	if (!e->threads)
 		exec_error_exit("Error: malloc", e);
@@ -106,21 +106,22 @@ void	set_philostructs(t_envl *e)
 	int		i;
 
 	i = 0;
-	e->philostructs = malloc(e->n_philosophers * sizeof(t_philo));
-	if (!e->philostructs)
+	e->pstructs = malloc(e->n_philosophers * sizeof(t_philo));
+	if (!e->pstructs)
 		exec_error_exit("Error: malloc", e);
 	while (i < e->n_philosophers)
 	{
-		e->philostructs[i].id = i + 1;
-		e->philostructs[i].common = &e->common;
-		e->philostructs[i].fork_right = &e->forks[i];
+		e->pstructs[i].id = i + 1;
+		e->pstructs[i].common = &e->common;
+		e->pstructs[i].fork_right = &e->forks[i];
 		if (i == 0)
-			e->philostructs[i].fork_left = &e->forks[e->n_philosophers - 1];
+			e->pstructs[i].fork_left = &e->forks[e->n_philosophers - 1];
 		else
-			e->philostructs[i].fork_left = &e->forks[i - 1];
-		e->philostructs[i].last_eat = e->common.starttime;
-		e->philostructs[i].last_eat_lock = &e->last_eat_locks[i];
-		e->philostructs[i].times_eaten = 0;
+			e->pstructs[i].fork_left = &e->forks[i - 1];
+		e->pstructs[i].last_eat = e->common.starttime;
+		e->pstructs[i].death_time = e->common.starttime + e->common.time_to_die;
+		e->pstructs[i].last_eat_lock = &e->last_eat_locks[i];
+		e->pstructs[i].times_eaten = 0;
 		i++;
 	}
 }

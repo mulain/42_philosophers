@@ -6,12 +6,12 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/01 20:50:46 by wmardin           #+#    #+#              #
-#    Updated: 2022/10/30 11:56:08 by wmardin          ###   ########.fr        #
+#    Updated: 2022/10/31 12:42:39 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
-CFLAGS = -pthread -g
+CFLAGS = -pthread -g -O3
 ERRORFLAGS = -Wall -Wextra -Werror
 DEFINE =
 
@@ -19,7 +19,8 @@ NAME =	philosophers
 SRC =	0_main.c\
 		1_setup_1.c\
 		1_setup_2.c\
-		2_thread_philosopher.c\
+		2_thread_philosopher_1.c\
+		2_thread_philosopher_2.c\
 		3_thread_monitor.c\
 		6_utils.c\
 		7_shutdown.c\
