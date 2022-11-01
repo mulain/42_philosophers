@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:37:17 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/31 08:22:32 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/01 20:38:40 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ bool	check_death(t_envl *e, int i)
 
 	dieded = false;
 	pthread_mutex_lock(e->pstructs[i].last_eat_lock);
-	if (e->pstructs[i].last_eat + e->common.time_to_die < get_time_ms())
+	if (get_time_ms() - e->pstructs[i].last_eat >= e->common.time_to_die)
 	{
 		set_stop(e);
-		printf("%li %i has died\n",
+		printf("%li %i died\n",
 			get_time_ms() - e->common.starttime, e->pstructs[i].id);
 		dieded = true;
 	}

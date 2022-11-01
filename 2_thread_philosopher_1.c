@@ -6,25 +6,35 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/31 16:44:30 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/01 20:36:06 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 /*
-Philosopher 1 starts with a delay for the case of an uneven number of philos.
-This enables the last philosopher to grab the fork of philosopher 1.
+Even numbered philosophers start with a usleep delay - but they also have
+their forks switched.
+If the even numbered philosphers started with the same fork order as
+the odd numbered ones, the usleep delay might not be long enough for the odd
+numbered philosophers to both finish locking their mutexes and
+then also take the mutexes of the even numbered philosphers.
+The net delay would be: usleep_delay - time_to_lock_first_mutex.
+This way the even numbered philosophers will start by trying to get the same
+mutex as the odd numbered philosophers - and be blocked there because they will
+be too late due to the usleep delay.
+An alternative solution could be to further increase the usleep delay,
+but this way the usleep can be kept under 1 ms, which is the minimum input
+for the time values.
 
-Even numbered philosophers start with a delay - but they also have their forks
-switched. This is an added and more dynamic delay, dependent on the time it takes
-the system to handle mutexes. If the even numbered philosphers started with the
-same fork order as the odd numbered ones, the hard coded delay might not be long
-enough for the odd numbered philosophers to finish locking their mutexes and then
-also take the mutexes of the even numbered philosphers.
-An alternative solution would be to further increase the hard coded start delay,
-but I prefer this solution because it is proportional to the local system's
-speed.
+Philosopher 1 starts with a smaller usleep delay. This means that the last
+philosopher will take number 1's fork - if the last philosopher isn't subjected
+to the large usleep delay of the even philosophers. So this will only happen if
+the number of philosophers is uneven.
+This results in there being 3 dining groups:
+- Uneven philosophers (minus philosopher 1)
+- Philosopher 1
+- Even philosophers
 */
 void	*philosopher(void *arg)
 {
@@ -36,31 +46,28 @@ void	*philosopher(void *arg)
 		switch_forks(p);
 	wait_timetarget(p->common->starttime, p);
 	if (p->id % 2 == 0)
-		usleep(1000);
-		//wait_timetarget(get_time_ms() + calc_thinktime(p), p);
-	/* if (p->id == 1)
-	{
-		usleep(100);
-	} */
+		usleep(800);
+	if (p->id == 1)
+		usleep(200);
 	stopped = check_stopped(p);
 	while (!stopped)
 	{
 		eat_sleep_think(p);
 		stopped = check_stopped(p);
 	}
-	printf("%i times eaten: %i\n", p->id, p->times_eaten);
 	return (NULL);
 }
 
 /*
-wait_timetarget conatins a call to check_stopped and returns the value
+wait_timetarget contains a call to check_stopped and returns the value
 of the bool that stops the simulation.
 broadcast contains a call to get_time_ms and returns the current time in ms.
+"is sleeping" has to be broadcast before releasing the forks in order to not have
+the log look as if an unavailable fork was taken.
 */
 void	eat_sleep_think(t_philo *p)
 {
 	time_t		now;
-	bool		stopped;
 
 	take_forks(p);
 	if (check_stopped(p))
@@ -73,12 +80,9 @@ void	eat_sleep_think(t_philo *p)
 	p->last_eat = now;
 	p->times_eaten++;
 	pthread_mutex_unlock(p->last_eat_lock);
-	//p->death_time = now + p->common->time_to_die;
-	stopped = wait_timetarget(now + p->common->time_to_eat, p);
-	release_forks(p);
-	if (stopped)
-		return ;
+	wait_timetarget(now + p->common->time_to_eat, p);
 	now = broadcast("is sleeping", p);
+	release_forks(p);
 	if (wait_timetarget(now + p->common->time_to_sleep, p))
 		return ;
 	now = broadcast("is thinking", p);
@@ -86,15 +90,29 @@ void	eat_sleep_think(t_philo *p)
 }
 
 /*
+For philosphers not to die, <time_to_die> has to be > 2 x <time_to_eat>
+because the philosophers have to be split in at least 2 groups that can
+only eat sequentially. <time_to_sleep> of philospher  group 1 can be used
+by group 2 to eat, so it isn't wasted time.
 Philosophers die if they don't start eating time_to_die after starting their
 last meal. The remaining time therefore is <time_to_die> - <time elapsed since
 last meal> (= current_time - last_eat).
 Uneven philosophers are supposed to eat first - but the even ones have to eat
-after them without dying. So their remaining time is decreased by <time_to_eat>
+after them without dying. wronk. they can already eat while the uneven ones are
+sleeping........
+
+So their remaining time is decreased by <time_to_eat>
 for the time they need to eat before they can give the forks to the other
 philosphers.
 If remaining_time drops below 1 ms, time_to_think is set to 0 (int division).
-This is accepted in order to give a safety margin
+This is accepted in order to give a safety margin.
+
+Potential negative values of <time_to_think> aren't a problem as
+wait_time_target will immediately terminate (and also the simulation likely
+has already stopped due to a death).
+
+printf("remaining time:%i\n", remaining_time);
+printf("thinktime:%i\n", time_to_think);
 */
 int	calc_thinktime(t_philo *p)
 {
@@ -104,16 +122,10 @@ int	calc_thinktime(t_philo *p)
 	pthread_mutex_lock(p->last_eat_lock);
 	remaining_time = p->common->time_to_die - get_time_ms() + p->last_eat;
 	pthread_mutex_unlock(p->last_eat_lock);
-	/* if (p->id % 2 == 1)
-		remaining_time -= p->common->time_to_eat; */
-	time_to_think = remaining_time * 0.5; //what about sleeping? what about eating *"?"
-	/* if (time_to_think < 0)
-		time_to_think = 0; */
+	time_to_think = remaining_time * 0.5;
 	/* if (time_to_think > 200)
 		time_to_think = 200; */
-	printf("remaining time:%i\n", remaining_time);
-	printf("thinktime:%i\n", time_to_think);
-	return (time_to_think);
+	return (time_to_think * 0);
 }
 
 bool	wait_timetarget(time_t timetarget, t_philo *p)
