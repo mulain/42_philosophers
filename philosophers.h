@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 13:12:28 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 15:38:00 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct envelope
 int		main(int argc, char **argv);
 bool	launch_threads(t_envl *e);
 bool	collect_threads(t_envl *e);
+void	shutdown(t_envl *e);
 time_t	get_time_ms(void);
 
 //1_setup_1.c
@@ -111,11 +112,6 @@ void	*monitor(void *arg);
 bool	check_death(t_envl *e, int i);
 bool	check_sated(t_envl *e, int i);
 void	set_stop(t_envl *e);
-
-//6_utils.c
-
-//7_shutdown.c
-void	shutdown(t_envl *e);
 
 //8_errors.c
 bool	input_error_exit(char *msg);

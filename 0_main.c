@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 13:12:18 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 15:36:22 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 /*
 Mandatory part of the project doesn't allow function exit, so the various parts
 of the main have a return to stop execution of the main.
+
+General points:
+- 	For philosphers not to die, <time_to_die> has to be > 2 x <time_to_eat>
+	because the philosophers have to be split in at least 2 groups that can
+	only eat sequentially.
+-	In case of uneven number: There are 3 groups, so <time_to_die> has to be
+	>= 3 x <time_to_eat>.
+-	<time_to_sleep> of a philospher group can be used by the next group to eat,
+	so it isn't wasted time.
 */
 int	main(int argc, char **argv)
 {
@@ -29,15 +38,6 @@ int	main(int argc, char **argv)
 	shutdown(&e);
 }
 
-/*
-Launches the monitor thread.
-Launches the philosopher threads.
-If only one philosopher is present, it only has one fork and will die at
-the correct time (function of monitor). But the philosopher thread would
-be stuck trying to get the 2nd fork. We are not allowed to kill threads,
-so the lone philo thread must be hard coded to not try to get a 2nd fork
-in order to not be stuck and be able terminate on its own.
-*/
 bool	launch_threads(t_envl *e)
 {
 	int		i;
@@ -69,6 +69,32 @@ bool	collect_threads(t_envl *e)
 	if (pthread_join(e->monitor, NULL))
 		return (exec_error_exit(ERR_THREAD_JOIN, e));
 	return (true);
+}
+
+void	shutdown(t_envl *e)
+{
+	int		i;
+
+	if (e->mutex_init)
+	{
+		pthread_mutex_destroy(&e->common.printlock);
+		pthread_mutex_destroy(&e->common.stoplock);
+		i = 0;
+		while (i < e->n_philosophers)
+		{
+			pthread_mutex_destroy(&e->forks[i]);
+			pthread_mutex_destroy(&e->last_eat_locks[i]);
+			i++;
+		}
+	}
+	if (e->forks)
+		free(e->forks);
+	if (e->last_eat_locks)
+		free(e->last_eat_locks);
+	if (e->threads)
+		free(e->threads);
+	if (e->philo)
+		free(e->philo);
 }
 
 time_t	get_time_ms(void)

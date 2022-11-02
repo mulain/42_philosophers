@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 13:21:24 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 15:31:32 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,10 @@ void	eat_sleep_think(t_philo *p)
 }
 
 /*
-For philosphers not to die, <time_to_die> has to be > 2 x <time_to_eat>
-because the philosophers have to be split in at least 2 groups that can
-only eat sequentially. <time_to_sleep> of philospher group 1 can be used
-by group 2 to eat, so it isn't wasted time.
 The remaining time is <time_to_die> - <time elapsed since last meal>
-(= current_time - last_eat).
+(= current_time - last_eat). Philosophers will think for 90 % of that time to
+not block other philosophers from getting forks. Empirically, this seems to
+only be relevant in case of uneven number of philosophers.
 If remaining_time drops below 1 ms, time_to_think is set to 0 (int division).
 This is accepted in order to give a safety margin.
 
@@ -108,16 +106,19 @@ printf("thinktime:%i\n", time_to_think);
 */
 int	calc_thinktime(t_philo *p)
 {
-	int		remaining_time;
 	int		time_to_think;
 
 	pthread_mutex_lock(p->last_eat_lock);
-	remaining_time = p->common->time_to_die - get_time_ms() + p->last_eat;
+	time_to_think = p->common->time_to_die - get_time_ms() + p->last_eat;
 	pthread_mutex_unlock(p->last_eat_lock);
-	time_to_think = remaining_time * 0.9;
+	time_to_think *= 0.9;
 	return (time_to_think);
 }
 
+/*
+Waiting function used for all philosopher activities.
+Returns a bool whose value is based on whether the simulation has stopped.
+*/
 bool	wait_timetarget(time_t timetarget, t_philo *p)
 {
 	bool	stopped;

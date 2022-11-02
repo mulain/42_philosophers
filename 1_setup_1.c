@@ -6,17 +6,15 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 11:22:37 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 15:19:28 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 /*
-Checks input.
-Initializes variables relevant to shutdown functions. These guard the shutdown
-processes (free, mutex destroy) in case of termination before their targets
-have been populated.
+exit function not allowed, so there has to be a return to stop execution if
+necessary.
 */
 bool	setup(t_envl *e, int argc, char **argv)
 {
