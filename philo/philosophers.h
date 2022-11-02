@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 15:38:00 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 21:20:02 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 # define MAX_PHILO "200"
 # define ERR_ARG_COUNT "Wrong argument count. Usage:\n\
-./philosophers <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> \
+./philo <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> \
 [<number_of_times_each_philosopher_must_eat>]\n"
 # define ERR_PHILNUMBER "<number_of_philosophers> must be from 1 to "
 # define ERR_TIMES "<time_to_[...]> and <number_of_times_each_philosopher_must_eat> \
