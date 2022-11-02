@@ -6,36 +6,45 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:32:22 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/01 16:26:30 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 11:05:30 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	input_error_exit(char *msg)
+/*
+Didn't use printf because I wanted to write to std_err.
+Other useful functions to write to std_err not allowed.
+Return is necessary to terminate the main (exit not allowed).
+*/
+bool	input_error_exit(char *msg)
 {
-	int		i;
-
-	printf("%s\n", msg);
-	i = write (2, "error\n", 6);
-	if (i)
-		exit(EXIT_FAILURE);
+	write (2, msg, ft_strlen(msg));
+	return (false);
 }
 
-void	input_error_philo_exit(char *msg)
+bool	input_error_philnumber_exit(char *msg)
 {
-	int		i;
-
-	printf("%s %i.\n", msg, MAX_PHILO);
-	i = write (2, "error\n", 6);
-	if (i)
-		exit(EXIT_FAILURE);
-	exit(EXIT_FAILURE);
+	write (2, msg, ft_strlen(msg));
+	write (2, MAX_PHILO, ft_strlen(MAX_PHILO));
+	write (2, ".\n", 2);
+	return (false);
 }
 
-void	exec_error_exit(char *msg, t_envl *e)
+bool	exec_error_exit(char *msg, t_envl *e)
 {
-	printf("%s\n", msg);
+	write (2, msg, ft_strlen(msg));
+	write (2, "\n", 1);
 	shutdown(e);
-	exit(EXIT_FAILURE);
+	return (false);
+}
+
+int	ft_strlen(char *string)
+{
+	int		i;
+
+	i = 0;
+	while (string[i])
+		i++;
+	return (i);
 }

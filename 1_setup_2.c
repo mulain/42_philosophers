@@ -5,118 +5,85 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/25 16:22:47 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/30 13:43:44 by wmardin          ###   ########.fr       */
+/*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
+/*   Updated: 2022/11/02 13:12:08 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	is_one_to_maxphilo(char *input)
+bool	init_envelopestruct(t_envl *e)
 {
-	int		num;
+	int		offset;
 
-	if (!is_digits(input))
-		return (0);
-	if (!is_intsize(input))
-		return (0);
-	num = ft_atoi(input);
-	if (num < 1 || num > MAX_PHILO)
-		return (0);
-	return (1);
+	e->threads = NULL;
+	e->forks = NULL;
+	e->mutex_init = false;
+	e->philo = NULL;
+	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
+	if (!e->threads)
+		return (exec_error_exit("Error: malloc", e));
+	offset = e->n_philosophers * 20;
+	if (offset > 1000)
+		offset = 1000;
+	if (offset < 100)
+		offset = 100;
+	e->common.starttime = get_time_ms() + offset;
+	e->common.stop = false;
+	if (e->n_philosophers == 1)
+		e->philofunction = philosopher_solo;
+	else
+		e->philofunction = philosopher;
+	return (true);
 }
 
-/*
-Checks whether the input string consists of only digits.
-*/
-int	is_digits(char *input)
+bool	init_mutexes(t_envl *e)
+{
+	int		i;
+	int		error;
+
+	error = 0;
+	e->forks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
+	e->last_eat_locks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
+	if (!e->forks || !e->last_eat_locks)
+		return (exec_error_exit(ERR_MALLOC, e));
+	i = 0;
+	while (i < e->n_philosophers)
+	{
+		error += pthread_mutex_init(&e->forks[i], NULL);
+		error += pthread_mutex_init(&e->last_eat_locks[i], NULL);
+		i++;
+	}
+	error += pthread_mutex_init(&e->common.printlock, NULL);
+	error += pthread_mutex_init(&e->common.stoplock, NULL);
+	if (error)
+		return (exec_error_exit(ERR_MUTEX_INIT, e));
+	e->mutex_init = true;
+	return (true);
+}
+
+bool	init_philostructs(t_envl *e)
 {
 	int		i;
 
 	i = 0;
-	while (input[i])
+	e->philo = malloc(e->n_philosophers * sizeof(t_philo));
+	if (!e->philo)
+		return (exec_error_exit(ERR_MALLOC, e));
+	while (i < e->n_philosophers)
 	{
-		if (input[i] < '0' || input[i] > '9')
-			return (0);
+		e->philo[i].id = i + 1;
+		e->philo[i].common = &e->common;
+		e->philo[i].fork_right = &e->forks[i];
+		if (i == 0)
+			e->philo[i].fork_left = &e->forks[e->n_philosophers - 1];
+		else
+			e->philo[i].fork_left = &e->forks[i - 1];
+		e->philo[i].last_eat = e->common.starttime;
+		e->philo[i].death_time = e->common.starttime + e->common.time_to_die;
+		e->philo[i].last_eat_lock = &e->last_eat_locks[i];
+		e->philo[i].times_eaten = 0;
 		i++;
 	}
-	return (1);
-}
-
-/*
-Checks whether the input string corresponds to a number in int range.
-The usually following conversion of the string to an int using ft_atoi
-would have unwanted behavior in case of an input > INT_MAX.
-*/
-int	is_intsize(char *string)
-{
-	int		len;
-
-	len = 0;
-	while (string[len])
-		len++;
-	if (len > 11)
-		return (0);
-	if (string[0] == '-')
-	{
-		if (len == 11)
-		{
-			if (ft_strncmp("-2147483648", string, 69) < 0)
-				return (0);
-		}
-		return (1);
-	}
-	if (len == 11)
-		return (0);
-	if (len == 10)
-	{
-		if (ft_strncmp("2147483647", string, 420) < 0)
-			return (0);
-	}
-	return (1);
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t			i;
-	unsigned char	*u_s1;
-	unsigned char	*u_s2;
-
-	i = 0;
-	u_s1 = (unsigned char *) s1;
-	u_s2 = (unsigned char *) s2;
-	while (i < n)
-	{
-		if (u_s1[i] == 0 && u_s2[i] == 0)
-			return (0);
-		if (u_s1[i] != u_s2[i])
-			return (u_s1[i] - u_s2[i]);
-		i++;
-	}
-	return (0);
-}
-
-int	ft_atoi(const char *nptr)
-{
-	int	i;
-	int	sign;
-	int	num;
-
-	i = 0;
-	num = 0;
-	sign = 1;
-	while (nptr[i] == ' ' || (nptr[i] > 8 && nptr[i] < 14))
-		++i;
-	if (nptr[i] == '+' || nptr[i] == '-')
-	{
-		if (nptr[i] == '-')
-			sign = -1;
-		++i;
-	}
-	while (nptr[i] > 47 && nptr[i] < 58)
-	{
-		num = num * 10 + (nptr[i] - 48);
-		++i;
-	}
-	return (num * sign);
+	return (true);
 }

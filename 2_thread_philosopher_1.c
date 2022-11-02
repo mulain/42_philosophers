@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/01 20:36:06 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 13:09:59 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	eat_sleep_think(t_philo *p)
 /*
 For philosphers not to die, <time_to_die> has to be > 2 x <time_to_eat>
 because the philosophers have to be split in at least 2 groups that can
-only eat sequentially. <time_to_sleep> of philospher  group 1 can be used
+only eat sequentially. <time_to_sleep> of philospher group 1 can be used
 by group 2 to eat, so it isn't wasted time.
 Philosophers die if they don't start eating time_to_die after starting their
 last meal. The remaining time therefore is <time_to_die> - <time elapsed since
@@ -125,7 +125,7 @@ int	calc_thinktime(t_philo *p)
 	time_to_think = remaining_time * 0.5;
 	/* if (time_to_think > 200)
 		time_to_think = 200; */
-	return (time_to_think * 0);
+	return (time_to_think);
 }
 
 bool	wait_timetarget(time_t timetarget, t_philo *p)
@@ -144,8 +144,10 @@ bool	wait_timetarget(time_t timetarget, t_philo *p)
 /*
 This function is necessary because killing a thread is not allowed in this
 project. Therefore, a solution for not getting stuck waiting for a 2nd fork
-has to be hard coded. The function could just return after broadcasting, but the
-poor lone philosopher should at least live his life as long as he can.
+has to be hard coded. This routine gets chosen during setup if the number of
+philosophers is 1.
+The function could just return after broadcasting, but the poor lone philosopher
+should at least live his life as long as he can.
 */
 void	*philosopher_solo(void *arg)
 {

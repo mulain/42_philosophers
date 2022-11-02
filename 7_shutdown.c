@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 11:40:17 by wmardin           #+#    #+#             */
-/*   Updated: 2022/10/31 08:22:51 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 13:12:38 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,6 @@ void	shutdown(t_envl *e)
 		free(e->last_eat_locks);
 	if (e->threads)
 		free(e->threads);
-	if (e->pstructs)
-		free(e->pstructs);
+	if (e->philo)
+		free(e->philo);
 }
