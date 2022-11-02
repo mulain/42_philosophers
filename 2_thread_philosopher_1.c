@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 13:09:59 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/02 13:17:19 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,16 +94,8 @@ For philosphers not to die, <time_to_die> has to be > 2 x <time_to_eat>
 because the philosophers have to be split in at least 2 groups that can
 only eat sequentially. <time_to_sleep> of philospher group 1 can be used
 by group 2 to eat, so it isn't wasted time.
-Philosophers die if they don't start eating time_to_die after starting their
-last meal. The remaining time therefore is <time_to_die> - <time elapsed since
-last meal> (= current_time - last_eat).
-Uneven philosophers are supposed to eat first - but the even ones have to eat
-after them without dying. wronk. they can already eat while the uneven ones are
-sleeping........
-
-So their remaining time is decreased by <time_to_eat>
-for the time they need to eat before they can give the forks to the other
-philosphers.
+The remaining time is <time_to_die> - <time elapsed since last meal>
+(= current_time - last_eat).
 If remaining_time drops below 1 ms, time_to_think is set to 0 (int division).
 This is accepted in order to give a safety margin.
 
@@ -122,7 +114,7 @@ int	calc_thinktime(t_philo *p)
 	pthread_mutex_lock(p->last_eat_lock);
 	remaining_time = p->common->time_to_die - get_time_ms() + p->last_eat;
 	pthread_mutex_unlock(p->last_eat_lock);
-	time_to_think = remaining_time * 0.5;
+	time_to_think = remaining_time * 0.9;
 	/* if (time_to_think > 200)
 		time_to_think = 200; */
 	return (time_to_think);
