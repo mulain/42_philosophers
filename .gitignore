@@ -2,3 +2,7 @@
 *.a
 test.c
 philosophers
+philo
+philo_bonus
+!/philo
+!/philo_bonus
