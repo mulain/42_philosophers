@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 15:36:22 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:53:40 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void	shutdown(t_envl *e)
 
 	if (e->mutex_init)
 	{
-		pthread_mutex_destroy(&e->common.printlock);
-		pthread_mutex_destroy(&e->common.stoplock);
+		pthread_mutex_destroy(&e->global.printlock);
+		pthread_mutex_destroy(&e->global.stoplock);
 		i = 0;
 		while (i < e->n_philosophers)
 		{

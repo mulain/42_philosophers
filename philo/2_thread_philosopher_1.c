@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 15:31:32 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:54:05 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	*philosopher(void *arg)
 	p = (t_philo *) arg;
 	if (p->id % 2 == 0)
 		switch_forks(p);
-	wait_timetarget(p->common->starttime, p);
+	wait_timetarget(p->global->starttime, p);
 	if (p->id % 2 == 0)
 		usleep(800);
 	if (p->id == 1)
@@ -80,10 +80,10 @@ void	eat_sleep_think(t_philo *p)
 	p->last_eat = now;
 	p->times_eaten++;
 	pthread_mutex_unlock(p->last_eat_lock);
-	wait_timetarget(now + p->common->time_to_eat, p);
+	wait_timetarget(now + p->global->time_to_eat, p);
 	now = broadcast("is sleeping", p);
 	release_forks(p);
-	if (wait_timetarget(now + p->common->time_to_sleep, p))
+	if (wait_timetarget(now + p->global->time_to_sleep, p))
 		return ;
 	now = broadcast("is thinking", p);
 	wait_timetarget(now + calc_thinktime(p), p);
@@ -109,7 +109,7 @@ int	calc_thinktime(t_philo *p)
 	int		time_to_think;
 
 	pthread_mutex_lock(p->last_eat_lock);
-	time_to_think = p->common->time_to_die - get_time_ms() + p->last_eat;
+	time_to_think = p->global->time_to_die - get_time_ms() + p->last_eat;
 	pthread_mutex_unlock(p->last_eat_lock);
 	time_to_think *= 0.9;
 	return (time_to_think);
@@ -146,7 +146,7 @@ void	*philosopher_solo(void *arg)
 	bool		stopped;
 
 	p = (t_philo *) arg;
-	wait_timetarget(p->common->starttime, p);
+	wait_timetarget(p->global->starttime, p);
 	pthread_mutex_lock(p->fork_right);
 	broadcast("has taken a fork", p);
 	stopped = check_stopped(p);

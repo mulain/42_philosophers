@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:37:17 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 13:11:53 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:54:13 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ bool	check_death(t_envl *e, int i)
 
 	dieded = false;
 	pthread_mutex_lock(e->philo[i].last_eat_lock);
-	if (get_time_ms() - e->philo[i].last_eat >= e->common.time_to_die)
+	if (get_time_ms() - e->philo[i].last_eat >= e->global.time_to_die)
 	{
 		set_stop(e);
 		printf("%li %i died\n",
-			get_time_ms() - e->common.starttime, e->philo[i].id);
+			get_time_ms() - e->global.starttime, e->philo[i].id);
 		dieded = true;
 	}
 	pthread_mutex_unlock(e->philo[i].last_eat_lock);
@@ -61,17 +61,17 @@ bool	check_sated(t_envl *e, int i)
 {
 	bool	sated;
 
-	if (e->common.times_to_eat == -1)
+	if (e->global.times_to_eat == -1)
 		return (false);
 	pthread_mutex_lock(e->philo[i].last_eat_lock);
-	sated = e->philo[i].times_eaten >= e->common.times_to_eat;
+	sated = e->philo[i].times_eaten >= e->global.times_to_eat;
 	pthread_mutex_unlock(e->philo[i].last_eat_lock);
 	return (sated);
 }
 
 void	set_stop(t_envl *e)
 {
-	pthread_mutex_lock(&e->common.stoplock);
-	e->common.stop = true;
-	pthread_mutex_unlock(&e->common.stoplock);
+	pthread_mutex_lock(&e->global.stoplock);
+	e->global.stop = true;
+	pthread_mutex_unlock(&e->global.stoplock);
 }

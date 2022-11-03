@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 08:45:41 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:53:09 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ must be positive integers in int range or zero: >= 0 and < 2147483648.\n"
 # define ERR_THREAD_CREATE "Error: pthread_create\n"
 # define ERR_THREAD_JOIN "Error: pthread_join\n"
 
-typedef struct common
+typedef struct globalinformation
 {
 	int					time_to_die;
 	int					time_to_eat;
@@ -42,12 +42,12 @@ typedef struct common
 	time_t				starttime;
 	pthread_mutex_t		printlock;
 	pthread_mutex_t		stoplock;
-}	t_common;
+}	t_global;
 
-typedef struct philostruct
+typedef struct philosopher
 {
 	int					id;
-	t_common			*common;
+	t_global			*global;
 	pthread_mutex_t		*fork_right;
 	pthread_mutex_t		*fork_left;
 	time_t				last_eat;
@@ -62,7 +62,7 @@ typedef struct envelope
 	pthread_t			monitor;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		*last_eat_locks;
-	t_common			common;
+	t_global			global;
 	bool				mutex_init;
 	t_philo				*philo;
 	void				*(*philofunction)();
