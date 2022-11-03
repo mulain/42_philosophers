@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 08:53:09 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:58:22 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ typedef struct globalinformation
 typedef struct philosopher
 {
 	int					id;
+	int					times_eaten;
+	time_t				last_eat;
 	t_global			*global;
 	pthread_mutex_t		*fork_right;
 	pthread_mutex_t		*fork_left;
-	time_t				last_eat;
 	pthread_mutex_t		*last_eat_lock;
-	int					times_eaten;
 }	t_philo;
 
 typedef struct envelope
