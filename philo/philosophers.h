@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 21:20:02 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:45:41 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct philostruct
 	pthread_mutex_t		*fork_right;
 	pthread_mutex_t		*fork_left;
 	time_t				last_eat;
-	time_t				death_time;
 	pthread_mutex_t		*last_eat_lock;
 	int					times_eaten;
 }	t_philo;

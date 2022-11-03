@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 13:12:08 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 08:46:01 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ bool	init_philostructs(t_envl *e)
 		else
 			e->philo[i].fork_left = &e->forks[i - 1];
 		e->philo[i].last_eat = e->common.starttime;
-		e->philo[i].death_time = e->common.starttime + e->common.time_to_die;
 		e->philo[i].last_eat_lock = &e->last_eat_locks[i];
 		e->philo[i].times_eaten = 0;
 		i++;
