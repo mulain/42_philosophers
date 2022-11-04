@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 10:20:38 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/04 20:18:39 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,20 @@
 int	main(int argc, char **argv)
 {
 	t_envl		e;
+	int			i;
 
 	setup(&e, argc, argv);
-	if (!launch_threads(&e))
-		return (EXIT_FAILURE);
-	if (!collect_threads(&e))
-		return (EXIT_FAILURE);
+	i = 0;
+	while (i < e.n_philosophers)
+	{
+		e.philo.id = i + 1;
+		e.philo.
+		e.pids[i] = fork();
+		if (e.pids[i] == -1)
+			error_msg_exit(e, "fork");
+		i++;
+	}
+
 	shutdown(&e);
 }
 

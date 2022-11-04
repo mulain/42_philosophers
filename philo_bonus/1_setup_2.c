@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 10:40:35 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/04 08:50:18 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,21 @@ void	init_envelopestruct(t_envl *e)
 {
 	int		offset;
 
-	e->pids = NULL;
-	e->forks = NULL;
-	e->mutex_init = false;
-	e->philo = NULL;
-	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
-	if (!e->threads)
-		return (exec_error_exit("Error: malloc", e));
+	e->sem_init = false;
+	e->pids = malloc(e->n_philosophers * sizeof(pid_t));
+	if (!e->pids)
+		exec_error_exit(ERR_MALLOC, e);
 	offset = e->n_philosophers * 20;
 	if (offset > 1000)
 		offset = 1000;
 	if (offset < 100)
 		offset = 100;
-	e->common.starttime = get_time_ms() + offset;
-	e->common.stop = false;
+	e->global.starttime = get_time_ms() + offset;
+	//e->global.stop = false;
 	if (e->n_philosophers == 1)
 		e->philofunction = philosopher_solo;
 	else
 		e->philofunction = philosopher;
-	return (true);
 }
 
 bool	init_mutexes(t_envl *e)

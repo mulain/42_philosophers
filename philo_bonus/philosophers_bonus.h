@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 10:46:47 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/04 08:22:57 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,16 @@ must be positive integers in int range or zero: >= 0 and < 2147483648.\n"
 # define ERR_THREAD_CREATE "Error: pthread_create\n"
 # define ERR_THREAD_JOIN "Error: pthread_join\n"
 
-typedef struct globalinformation
+typedef struct philosopher_process
 {
+	int			id;
 	int			time_to_die;
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			times_to_eat;
-	bool		stop;
 	time_t		starttime;
 	sem_t		printlock;
 	sem_t		stoplock;
-}	t_global;
-
-typedef struct philosopher
-{
-	int			id;
 	t_global	*global;
 	sem_t		*forks;
 	time_t		last_eat;
@@ -58,14 +53,14 @@ typedef struct philosopher
 
 typedef struct envelope
 {
-	int					n_philosophers;
-	pid_t				*pids;
-	sem_t				forks;
-	pthread_mutex_t		*last_eat_locks;
-	t_global			global;
-	bool				sem_init;
-	t_philo				*philo;
-	void				*(*philofunction)();
+	int			n_philosophers;
+	pid_t		*pids;
+	sem_t		forks;
+	sem_t		*last_eat_locks;
+	t_global	global;
+	bool		sem_init;
+	t_philo		philo;
+	void		*(*philofunction)();
 }	t_envl;
 
 //0_main.c
@@ -91,6 +86,10 @@ int		is_digits(char *input);
 int		is_intsize(char *argv);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_atoi(const char *nptr);
+
+//2_process_philosopher_1.c
+void	philosopher(void);
+void	philosopher_solo(void);
 
 //8_errors.c
 void	input_error_exit(char *msg);

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:32:22 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 10:23:33 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/04 08:01:05 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	input_error_philnumber_exit(char *msg)
 	exit(EXIT_FAILURE);
 }
 
-bool	exec_error_exit(char *msg, t_envl *e)
+void	exec_error_exit(char *msg, t_envl *e)
 {
 	write (2, msg, ft_strlen(msg));
 	write (2, "\n", 1);
