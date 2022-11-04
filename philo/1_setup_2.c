@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 08:54:00 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/04 08:01:47 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ bool	init_envelopestruct(t_envl *e)
 	e->philo = NULL;
 	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
 	if (!e->threads)
-		return (exec_error_exit("Error: malloc", e));
+		return (exec_error_exit(ERR_MALLOC, e));
 	offset = e->n_philosophers * 20;
 	if (offset > 1000)
 		offset = 1000;

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 08:54:05 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/04 08:02:19 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	calc_thinktime(t_philo *p)
 	pthread_mutex_lock(p->last_eat_lock);
 	time_to_think = p->global->time_to_die - get_time_ms() + p->last_eat;
 	pthread_mutex_unlock(p->last_eat_lock);
-	time_to_think *= 0.9;
+	time_to_think *= 0.8;
 	return (time_to_think);
 }
 
