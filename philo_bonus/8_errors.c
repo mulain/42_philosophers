@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:32:22 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 11:05:30 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:23:33 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@ Didn't use printf because I wanted to write to std_err.
 Other useful functions to write to std_err not allowed.
 Return is necessary to terminate the main (exit not allowed).
 */
-bool	input_error_exit(char *msg)
+void	input_error_exit(char *msg)
 {
 	write (2, msg, ft_strlen(msg));
-	return (false);
+	exit(EXIT_FAILURE);
 }
 
-bool	input_error_philnumber_exit(char *msg)
+void	input_error_philnumber_exit(char *msg)
 {
 	write (2, msg, ft_strlen(msg));
 	write (2, MAX_PHILO, ft_strlen(MAX_PHILO));
 	write (2, ".\n", 2);
-	return (false);
+	exit(EXIT_FAILURE);
 }
 
 bool	exec_error_exit(char *msg, t_envl *e)

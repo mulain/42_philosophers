@@ -6,17 +6,17 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 08:39:39 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:40:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-bool	init_envelopestruct(t_envl *e)
+void	init_envelopestruct(t_envl *e)
 {
 	int		offset;
 
-	e->threads = NULL;
+	e->pids = NULL;
 	e->forks = NULL;
 	e->mutex_init = false;
 	e->philo = NULL;

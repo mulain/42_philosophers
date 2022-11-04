@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 09:02:39 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:46:47 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <semaphore.h>
 # include <sys/time.h>
 # include <stdbool.h>
+# include <sys/wait.h>
+# include <signal.h>
 
 # define MAX_PHILO "200"
 # define ERR_ARG_COUNT "Wrong argument count. Usage:\n\
@@ -57,6 +59,7 @@ typedef struct philosopher
 typedef struct envelope
 {
 	int					n_philosophers;
+	pid_t				*pids;
 	sem_t				forks;
 	pthread_mutex_t		*last_eat_locks;
 	t_global			global;
@@ -73,12 +76,12 @@ void	shutdown(t_envl *e);
 time_t	get_time_ms(void);
 
 //1_setup_1.c
-bool	setup(t_envl *e, int argc, char **argv);
-bool	check_input(int argc, char **argv);
+void	setup(t_envl *e, int argc, char **argv);
+void	check_input(int argc, char **argv);
 void	parse_input(t_envl *e, int argc, char **argv);
 
 //1_setup_2.c
-bool	init_envelopestruct(t_envl *e);
+void	init_envelopestruct(t_envl *e);
 bool	init_mutexes(t_envl *e);
 bool	init_philostructs(t_envl *e);
 
@@ -90,8 +93,8 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_atoi(const char *nptr);
 
 //8_errors.c
-bool	input_error_exit(char *msg);
-bool	input_error_philnumber_exit(char *msg);
+void	input_error_exit(char *msg);
+void	input_error_philnumber_exit(char *msg);
 bool	exec_error_exit(char *msg, t_envl *e);
 int		ft_strlen(char *string);
 
