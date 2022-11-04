@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 08:58:22 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/04 08:23:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct globalinformation
 	pthread_mutex_t		stoplock;
 }	t_global;
 
-typedef struct philosopher
+typedef struct philosopher_thread
 {
 	int					id;
 	int					times_eaten;
