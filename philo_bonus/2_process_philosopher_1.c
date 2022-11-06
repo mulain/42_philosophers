@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 20:11:42 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 21:44:41 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ void	eat_sleep_think(t_envl *e)
 	e->last_eat = now;
 	e->times_eaten++;
 	if (e->times_eaten == e->times_to_eat)
+	{
+		printf("if clause allsated active\n");
 		sem_post(e->allsated);
+	}
 	sem_post(e->last_eat_locks[e->id - 1]);
 	wait_timetarget(now + e->time_to_eat);
 	now = broadcast("is sleeping", e);

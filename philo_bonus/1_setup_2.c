@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 19:56:45 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 21:35:56 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	open_semaphores(t_envl *e)
 	e->sem_init = true;
 }
 
-int	calc_starttime(t_envl *e)
+time_t	calc_starttime(t_envl *e)
 {
 	int		offset;
 

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 19:58:18 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 21:44:59 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <pthread.h>
 # include <semaphore.h>
 # include <sys/time.h>
 # include <stdbool.h>
 # include <sys/wait.h>
 # include <signal.h>
 # include <fcntl.h>
-#include <sys/stat.h>
+# include <sys/stat.h>
 
 # define MAX_PHILO "200"
 # define ERR_ARG_COUNT "Wrong argument count. Usage:\n\
@@ -48,6 +49,8 @@ typedef struct envelope
 	int			id;
 	time_t		starttime;
 	pid_t		*pids;
+	pthread_t	eatmonitor;
+	pthread_t	stopmonitor;
 	bool		sem_init;
 	void		(*philofunction)();
 	char		**le_locks_names;
@@ -60,8 +63,10 @@ typedef struct envelope
 
 //0_main.c
 int		main(int argc, char **argv);
-bool	launch_threads(t_envl *e);
-bool	collect_threads(t_envl *e);
+void	launch_monitorthreads(t_envl *e);
+void	*eatmonitor(void *arg);
+void	*stopmonitor(void *arg);
+
 void	shutdown(t_envl *e);
 void	free2darray_char(char **array);
 void	unlink_semaphores(t_envl *e);
@@ -76,7 +81,7 @@ void	parse_input(t_envl *e, int argc, char **argv);
 void	init_envelopestruct(t_envl *e);
 void	open_semaphores(t_envl *e);
 bool	init_philostructs(t_envl *e);
-int		calc_starttime(t_envl *e);
+time_t	calc_starttime(t_envl *e);
 
 //1_setup_3.c
 int		is_one_to_maxphilo(char *input);
