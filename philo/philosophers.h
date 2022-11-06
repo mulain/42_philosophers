@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 09:30:35 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 21:16:06 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	parse_input(t_envl *e, int argc, char **argv);
 bool	init_envelopestruct(t_envl *e);
 bool	init_mutexes(t_envl *e);
 bool	init_philostructs(t_envl *e);
-int		calc_starttime(t_envl *e);
+time_t	calc_starttime(t_envl *e);
 
 //1_setup_3.c
 int		is_one_to_maxphilo(char *input);

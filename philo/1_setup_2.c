@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 09:30:12 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 21:15:44 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ bool	init_philostructs(t_envl *e)
 	return (true);
 }
 
-int	calc_starttime(t_envl *e)
+time_t	calc_starttime(t_envl *e)
 {
 	int		offset;
 
