@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 11:05:31 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 11:16:57 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,18 @@ then opening.
 */
 void	open_sharedsemaphores(t_envl *e)
 {
+	int 	i;
 
 	//sem_t	*lasteat;
-
 	sem_unlink("/allsated");
 	sem_unlink("/print");
 	sem_unlink("/stop");
 	sem_unlink("/forks");
+	i = 0;
+	while (i < e->n_philosophers)
+	{
+
+	}
 	//sem_unlink("/lasteat");
 	e->allsated = sem_open("/allsated", O_CREAT, 0644, 0);
 	e->print = sem_open("/print", O_CREAT, 0644, 1);
@@ -68,31 +73,6 @@ void	open_sharedsemaphores(t_envl *e)
 		|| e->stop == SEM_FAILED	|| e->forks == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN);
 	//lasteat = semopen("/lasteat", 0660, 1);
-}
-
-bool	init_mutexes(t_envl *e)
-{
-	int		i;
-	int		error;
-
-	error = 0;
-	e->forks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
-	e->last_eat_locks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
-	if (!e->forks || !e->last_eat_locks)
-		return (exec_error_exit(ERR_MALLOC, e));
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		error += pthread_mutex_init(&e->forks[i], NULL);
-		error += pthread_mutex_init(&e->last_eat_locks[i], NULL);
-		i++;
-	}
-	error += pthread_mutex_init(&e->common.printlock, NULL);
-	error += pthread_mutex_init(&e->common.stoplock, NULL);
-	if (error)
-		return (exec_error_exit(ERR_MUTEX_INIT, e));
-	e->mutex_init = true;
-	return (true);
 }
 
 bool	init_philostructs(t_envl *e)

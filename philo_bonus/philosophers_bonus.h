@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 11:04:34 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 11:18:31 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct envelope
 	sem_t		*print;
 	sem_t		*stop;
 	sem_t		*forks;
+	sem_t		**printlocks;
 	bool		sem_init;
 	t_philo		philo;
 	void		*(*philofunction)();
@@ -90,10 +91,16 @@ int		ft_atoi(const char *nptr);
 void	philosopher(void);
 void	philosopher_solo(void);
 
+//6_utils.c
+char	*ft_strjoin(char const *s1, char const *s2);
+void	*ft_calloc(size_t nmemb, size_t size);
+void	*ft_memset(void *s, int c, size_t n);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+int		ft_strlen(char *string);
+
 //8_errors.c
 void	input_error_exit(char *msg);
 void	input_error_philnumber_exit(char *msg);
 bool	exec_error_exit(char *msg, t_envl *e);
-int		ft_strlen(char *string);
 
 #endif
