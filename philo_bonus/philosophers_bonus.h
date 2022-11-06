@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 13:34:46 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 13:55:46 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,33 +36,27 @@ must be positive integers in int range or zero: >= 0 and < 2147483648.\n"
 # define ERR_THREAD_CREATE "Error: pthread_create\n"
 # define ERR_THREAD_JOIN "Error: pthread_join\n"
 
-typedef struct philosopher_process
+typedef struct envelope
 {
-	int			id;
+	int			n_philosophers;
 	int			time_to_die;
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			times_to_eat;
-	sem_t		*lasteat;
-	time_t		last_eat;
 	int			times_eaten;
-}	t_philo;
-
-typedef struct envelope
-{
-	int			n_philosophers;
+	time_t		last_eat;
+	int			id;
 	time_t		starttime;
 	pid_t		*pids;
+	sem_t		**last_eat_locks;
+	char		**le_locks_names;
 	sem_t		*allsated;
 	sem_t		*printlock;
 	sem_t		*stoplock;
 	sem_t		*forks;
-	sem_t		**last_eat_locks;
-	char		**le_locks_names;
 	bool		stop; //prolly not needed, cuase semt stop
 	bool		sem_init;
-	t_philo		philo;
-	void		*(*philofunction)();
+	void		*(*philofunction)(); // adapt this to not need casting
 }	t_envl;
 
 //0_main.c

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/05 12:31:51 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 13:54:17 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ void	check_input(int argc, char **argv)
 void	parse_input(t_envl *e, int argc, char **argv)
 {
 	e->n_philosophers = ft_atoi(argv[1]);
-	e->global.time_to_die = ft_atoi(argv[2]);
-	e->global.time_to_eat = ft_atoi(argv[3]);
-	e->global.time_to_sleep = ft_atoi(argv[4]);
+	e->time_to_die = ft_atoi(argv[2]);
+	e->time_to_eat = ft_atoi(argv[3]);
+	e->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		e->global.times_to_eat = ft_atoi(argv[5]);
+		e->times_to_eat = ft_atoi(argv[5]);
 	else
-		e->global.times_to_eat = -1;
+		e->times_to_eat = -1;
 }
