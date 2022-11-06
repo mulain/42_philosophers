@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 11:16:57 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 11:45:29 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,12 @@ void	init_envelopestruct(t_envl *e)
 {
 	int		offset;
 
-	e->init = false;
+	e->sem_init = false;
 	e->pids = malloc(e->n_philosophers * sizeof(pid_t));
 	if (!e->pids)
 		exec_error_exit(ERR_MALLOC, e);
-	offset = e->n_philosophers * 20;
-	if (offset > 1000)
-		offset = 1000;
-	if (offset < 100)
-		offset = 100;
-	e->global.starttime = get_time_ms() + offset;
-	//e->global.stop = false;
+	e->starttime = calc_starttime(e);
+	e->stop = false;
 	if (e->n_philosophers == 1)
 		e->philofunction = philosopher_solo;
 	else
@@ -52,7 +47,7 @@ then opening.
 */
 void	open_sharedsemaphores(t_envl *e)
 {
-	int 	i;
+	int		i;
 
 	//sem_t	*lasteat;
 	sem_unlink("/allsated");
@@ -62,7 +57,8 @@ void	open_sharedsemaphores(t_envl *e)
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-
+		sem_unlink(e->last_eat_names[i]);
+		i++;
 	}
 	//sem_unlink("/lasteat");
 	e->allsated = sem_open("/allsated", O_CREAT, 0644, 0);
@@ -99,4 +95,16 @@ bool	init_philostructs(t_envl *e)
 		i++;
 	}
 	return (true);
+}
+
+int	calc_starttime(t_envl *e)
+{
+	int		offset;
+
+	offset = e->n_philosophers * 20;
+	if (offset > 1000)
+		offset = 1000;
+	if (offset < 100)
+		offset = 100;
+	return (get_time_ms() + offset);
 }

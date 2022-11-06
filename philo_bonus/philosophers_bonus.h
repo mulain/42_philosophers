@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 11:18:31 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 11:45:49 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ typedef struct philosopher_process
 	int			time_to_sleep;
 	int			times_to_eat;
 	sem_t		*lasteat;
-	time_t		starttime;
 	time_t		last_eat;
 	int			times_eaten;
 }	t_philo;
@@ -52,12 +51,15 @@ typedef struct philosopher_process
 typedef struct envelope
 {
 	int			n_philosophers;
+	time_t		starttime;
 	pid_t		*pids;
 	sem_t		*allsated;
-	sem_t		*print;
-	sem_t		*stop;
+	sem_t		*printlock;
+	sem_t		*stoplock;
 	sem_t		*forks;
-	sem_t		**printlocks;
+	sem_t		**last_eat;
+	char		**last_eat_names;
+	bool		stop; //prolly not needed, cuase semt stop
 	bool		sem_init;
 	t_philo		philo;
 	void		*(*philofunction)();
@@ -79,6 +81,7 @@ void	parse_input(t_envl *e, int argc, char **argv);
 void	init_envelopestruct(t_envl *e);
 void	open_sharedsemaphores(t_envl *e);
 bool	init_philostructs(t_envl *e);
+int		calc_starttime(t_envl *e);
 
 //1_setup_3.c
 int		is_one_to_maxphilo(char *input);
