@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 19:39:32 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 19:56:45 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	init_envelopestruct(t_envl *e)
 	e->last_eat_locks = malloc(e->n_philosophers * sizeof(sem_t));
 	if (!e->le_locks_names)
 		exec_error_exit(ERR_MALLOC, e);
-	e->stop = false;
 	e->sem_init = false;
 	if (e->n_philosophers == 1)
 		e->philofunction = philosopher_solo;

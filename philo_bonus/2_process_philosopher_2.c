@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 19:37:51 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 19:58:53 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,6 @@ void	release_forks(t_envl *e)
 {
 	sem_post(e->forks);
 	sem_post(e->forks);
-}
-
-bool	check_stopped(t_philo *p)
-{
-	bool	stopped;
-
-	pthread_mutex_lock(&p->global->stoplock);
-	stopped = p->global->stop;
-	pthread_mutex_unlock(&p->global->stoplock);
-	return (stopped);
 }
 
 /*

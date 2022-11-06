@@ -6,7 +6,7 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/02 17:30:04 by wmardin           #+#    #+#              #
-#    Updated: 2022/11/06 16:01:13 by wmardin          ###   ########.fr        #
+#    Updated: 2022/11/06 19:58:42 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRC =	0_main.c\
 		1_setup_2.c\
 		1_setup_3.c\
 		2_process_philosopher_1.c\
+		2_process_philosopher_2.c\
 		6_utils_1.c\
 		6_utils_2.c\
 		8_errors.c
