@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 17:26:56 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 18:49:53 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,12 @@ int	main(int argc, char **argv)
 			exec_error_exit("Error: fork\n", &e);
 		if (e.pids[i] == 0)
 		{
+			printf("child: philo id:%i\n", e.id);
 			e.philofunction(&e);
+			printf("shouldnt be here\n");
 			exit(EXIT_SUCCESS);
 		}
+		else
 		i++;
 	}
 

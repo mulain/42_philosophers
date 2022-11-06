@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 17:27:06 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 18:55:15 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@ void	init_envelopestruct(t_envl *e)
 It is good practice to unlink semaphores before opening them to
 make sure they are not used by a previous process. So start by unlinking,
 then opening.
+Flags: O_CREAT for create semaphore, O_EXCL makes sem_open return an error
+if the semaphore to be created already exists. Highly unlikely since we
+closed them before and named them specifically, but apparently still good
+practice.
 -	The semaphores named in the 2d array e-lasteatnames are the locks for
 	reading / writing to the eat associated variables. See comment on
 	init_envelopestruct for why this approach was chosen.
@@ -75,22 +79,25 @@ void	open_semaphores(t_envl *e)
 	int		i;
 
 	unlink_semaphores(e);
-	e->allsated = sem_open("/allsated", O_CREAT, 0644, 0);
-	e->printlock = sem_open("/print", O_CREAT, 0644, 1);
-	e->stoplock = sem_open("/stop", O_CREAT, 0644, 0);
-	e->forks = sem_open("/forks", O_CREAT, 0644, e->n_philosophers);
+	e->allsated = sem_open("/allsated", O_CREAT | O_EXCL, 0644, 0);
+	e->printlock = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
+	e->stoplock = sem_open("/stop", O_CREAT | O_EXCL, 0644, 0);
+	e->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, e->n_philosophers);
+	printf("test\n");
 	if (e->allsated == SEM_FAILED || e->printlock == SEM_FAILED
 		|| e->stoplock == SEM_FAILED || e->forks == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
+	printf("test\n");
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-		e->last_eat_locks[i] = sem_open(e->le_locks_names[i], O_CREAT, 0644, 1);
+		e->last_eat_locks[i] = sem_open(e->le_locks_names[i],
+				O_CREAT | O_EXCL, 0644, 1);
 		if (e->last_eat_locks[i] == SEM_FAILED)
 			exec_error_exit(ERR_SEM_OPEN, e);
 		i++;
 	}
-	printf("test\n");
+	e->sem_init = true;
 }
 
 int	calc_starttime(t_envl *e)
