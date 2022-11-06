@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 10:13:51 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 16:12:08 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 19:05:01 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char	*zero_or_pos_itoa(int n)
 		i--;
 		n /= 10;
 	}
-	printf("itoa mod (wont print 0 cause gets returned before):%s\n", out);
 	return (out);
 }
 

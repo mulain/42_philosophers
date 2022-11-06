@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 18:57:27 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 19:36:49 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,17 @@ int	main(int argc, char **argv)
 			exec_error_exit("Error: fork\n", &e);
 		if (e.pids[i] == 0)
 		{
-			printf("child: philo id:%i\n", e.id);
-			printf("child eatloc name:%s\n", e.le_locks_names[i]);
 			e.philofunction(&e);
 			printf("shouldnt be here\n");
 			exit(EXIT_SUCCESS);
 		}
-		else
+		//else not needed i gueeees? since the children will end in philo
+		//termination thread: check stop semaphore (gets set by children if starvation)
+		//termination thread2: check sated varibale and set stop if sated.
+		//if stop, take printlock to stop msgs (better: child should broadcast its death
+		//and never post back the printlock),
+		// kill children, shutdown.
+
 		i++;
 	}
 

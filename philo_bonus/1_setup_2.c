@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 18:55:15 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 19:39:32 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ so here we are.
 void	init_envelopestruct(t_envl *e)
 {
 	int		i;
+	char	*i_alpha;
 
 	e->times_eaten = 0;
 	e->starttime = calc_starttime(e);
@@ -45,7 +46,9 @@ void	init_envelopestruct(t_envl *e)
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-		e->le_locks_names[i] = ft_strjoin("/last_eat", zero_or_pos_itoa(i));
+		i_alpha = zero_or_pos_itoa(i);
+		e->le_locks_names[i] = ft_strjoin("/last_eat", i_alpha);
+		free (i_alpha);
 		if (!e->le_locks_names[i])
 			exec_error_exit(ERR_MALLOC, e);
 		i++;
@@ -79,15 +82,14 @@ void	open_semaphores(t_envl *e)
 	int		i;
 
 	unlink_semaphores(e);
+	//also close sem?
 	e->allsated = sem_open("/allsated", O_CREAT | O_EXCL, 0644, 0);
 	e->printlock = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
 	e->stoplock = sem_open("/stop", O_CREAT | O_EXCL, 0644, 0);
 	e->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, e->n_philosophers);
-	printf("test\n");
 	if (e->allsated == SEM_FAILED || e->printlock == SEM_FAILED
 		|| e->stoplock == SEM_FAILED || e->forks == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
-	printf("test\n");
 	i = 0;
 	while (i < e->n_philosophers)
 	{
