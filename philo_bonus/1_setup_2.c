@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 16:08:21 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 17:27:06 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ void	init_envelopestruct(t_envl *e)
 	if (!e->pids)
 		exec_error_exit(ERR_MALLOC, e);
 	e->le_locks_names = malloc(e->n_philosophers * sizeof(char *));
+	if (!e->le_locks_names)
+		exec_error_exit(ERR_MALLOC, e);
+	e->last_eat_locks = malloc(e->n_philosophers * sizeof(sem_t));
 	if (!e->le_locks_names)
 		exec_error_exit(ERR_MALLOC, e);
 	e->stop = false;
@@ -75,7 +78,7 @@ void	open_semaphores(t_envl *e)
 	e->allsated = sem_open("/allsated", O_CREAT, 0644, 0);
 	e->printlock = sem_open("/print", O_CREAT, 0644, 1);
 	e->stoplock = sem_open("/stop", O_CREAT, 0644, 0);
-	e->printlock = sem_open("/forks", O_CREAT, 0644, e->n_philosophers);
+	e->forks = sem_open("/forks", O_CREAT, 0644, e->n_philosophers);
 	if (e->allsated == SEM_FAILED || e->printlock == SEM_FAILED
 		|| e->stoplock == SEM_FAILED || e->forks == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
@@ -87,6 +90,7 @@ void	open_semaphores(t_envl *e)
 			exec_error_exit(ERR_SEM_OPEN, e);
 		i++;
 	}
+	printf("test\n");
 }
 
 int	calc_starttime(t_envl *e)

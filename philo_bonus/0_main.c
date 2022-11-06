@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 16:03:30 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 17:26:56 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,9 @@ int	main(int argc, char **argv)
 
 void	shutdown(t_envl *e)
 {
-	
 
+	if (e->last_eat_locks)
+		free (e->last_eat_locks);
 	if (e->sem_init)
 	{
 		unlink_semaphores(e);
