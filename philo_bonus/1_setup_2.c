@@ -6,20 +6,36 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 11:45:29 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 13:35:05 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
+/*
+We are not allowed to use sem_init, only sem_open.
+That means it is not possible to specify a process specific semaphore. So it
+is necessary to make a distinct semaphore for each process to act as a lock for
+the writing / reading of the eating-variables.
+Another note: I don't believe it is functionally relevant to protect this data
+from race conditions. However the subject stated that no races are allowed,
+so here we are.
+*/
 void	init_envelopestruct(t_envl *e)
 {
-	int		offset;
+	int		i;
 
 	e->sem_init = false;
 	e->pids = malloc(e->n_philosophers * sizeof(pid_t));
 	if (!e->pids)
 		exec_error_exit(ERR_MALLOC, e);
+	e->le_locks_names = malloc(e->n_philosophers * sizeof(char *));
+	i = 0;
+	while (i < e->n_philosophers)
+	{
+		e->le_locks_names[i] = ft_strjoin("/last_eat", zero_or_pos_itoa(i));
+		i++;
+	}
 	e->starttime = calc_starttime(e);
 	e->stop = false;
 	if (e->n_philosophers == 1)
@@ -29,11 +45,12 @@ void	init_envelopestruct(t_envl *e)
 }
 
 /*
-jacob sorber what is a semaphore
-9.30
 Apparently, it is good practice to unlink semaphores before opening them to
 make sure they are not used by a previous process. So start by unlinking,
 then opening.
+-	The semaphores named in the 2d array e-lasteatnames are the locks for
+	reading / writing to the eat associated variables. See comment on
+	init_envelopestruct for why this approach was chosen.
 -	allsated is a counter semaphore that starts at 0 and gets posted to
 	when a philosopher has eaten enough times. At that point the main
 	process, that has been waiting for allsated to reach n_philosopher,
@@ -45,11 +62,32 @@ then opening.
 	terminate the simulation.
 -	forks is a resource semaphore that gets depleted by the eating philosophers.
 */
-void	open_sharedsemaphores(t_envl *e)
+void	open_semaphores(t_envl *e)
 {
 	int		i;
 
-	//sem_t	*lasteat;
+	unlink_semaphores(e);
+	e->allsated = sem_open("/allsated", O_CREAT, 0644, 0);
+	e->printlock = sem_open("/print", O_CREAT, 0644, 1);
+	e->stoplock = sem_open("/stop", O_CREAT, 0644, 0);
+	e->printlock = sem_open("/forks", O_CREAT, 0644, e->n_philosophers);
+	if (e->allsated == SEM_FAILED || e->printlock == SEM_FAILED
+		|| e->stoplock == SEM_FAILED || e->forks == SEM_FAILED)
+		exec_error_exit(ERR_SEM_OPEN, e);
+	i = 0;
+	while (i < e->n_philosophers)
+	{
+		sem_open(e->le_locks_names[i], O_CREAT, 0644, 1);
+		if (e->le_locks_names[i] == SEM_FAILED)
+			exec_error_exit(ERR_SEM_OPEN, e);
+		i++;
+	}
+}
+
+void	unlink_semaphores(t_envl *e)
+{
+	int		i;
+
 	sem_unlink("/allsated");
 	sem_unlink("/print");
 	sem_unlink("/stop");
@@ -57,18 +95,9 @@ void	open_sharedsemaphores(t_envl *e)
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-		sem_unlink(e->last_eat_names[i]);
+		sem_unlink(e->le_locks_names[i]);
 		i++;
 	}
-	//sem_unlink("/lasteat");
-	e->allsated = sem_open("/allsated", O_CREAT, 0644, 0);
-	e->print = sem_open("/print", O_CREAT, 0644, 1);
-	e->stop = sem_open("/stop", O_CREAT, 0644, 0);
-	e->print = sem_open("/forks", O_CREAT, 0644, e->n_philosophers);
-	if (e->allsated == SEM_FAILED || e->print == SEM_FAILED
-		|| e->stop == SEM_FAILED	|| e->forks == SEM_FAILED)
-		exec_error_exit(ERR_SEM_OPEN);
-	//lasteat = semopen("/lasteat", 0660, 1);
 }
 
 bool	init_philostructs(t_envl *e)

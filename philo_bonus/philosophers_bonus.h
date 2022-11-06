@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 11:45:49 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 13:34:46 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ typedef struct envelope
 	sem_t		*printlock;
 	sem_t		*stoplock;
 	sem_t		*forks;
-	sem_t		**last_eat;
-	char		**last_eat_names;
+	sem_t		**last_eat_locks;
+	char		**le_locks_names;
 	bool		stop; //prolly not needed, cuase semt stop
 	bool		sem_init;
 	t_philo		philo;
@@ -79,7 +79,7 @@ void	parse_input(t_envl *e, int argc, char **argv);
 
 //1_setup_2.c
 void	init_envelopestruct(t_envl *e);
-void	open_sharedsemaphores(t_envl *e);
+void	open_semaphores(t_envl *e);
 bool	init_philostructs(t_envl *e);
 int		calc_starttime(t_envl *e);
 
@@ -94,12 +94,16 @@ int		ft_atoi(const char *nptr);
 void	philosopher(void);
 void	philosopher_solo(void);
 
-//6_utils.c
+//6_utils_1.c
 char	*ft_strjoin(char const *s1, char const *s2);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	*ft_memset(void *s, int c, size_t n);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 int		ft_strlen(char *string);
+
+//6_utils_2.c
+char	*zero_or_pos_itoa(int n);
+char	*ft_strdup(const char *s);
 
 //8_errors.c
 void	input_error_exit(char *msg);
