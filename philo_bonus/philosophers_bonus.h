@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/04 08:22:57 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 10:04:29 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <stdbool.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include <fcntl.h>
+#include <sys/stat.h>
 
 # define MAX_PHILO "200"
 # define ERR_ARG_COUNT "Wrong argument count. Usage:\n\
@@ -30,7 +32,7 @@
 # define ERR_TIMES "<time_to_[...]> and <number_of_times_each_philosopher_must_eat> \
 must be positive integers in int range or zero: >= 0 and < 2147483648.\n"
 # define ERR_MALLOC "Error: malloc\n"
-# define ERR_MUTEX_INIT "Error: pthread_mutex_init\n"
+# define ERR_SEM_OPEN "Error: semopen\n"
 # define ERR_THREAD_CREATE "Error: pthread_create\n"
 # define ERR_THREAD_JOIN "Error: pthread_join\n"
 
@@ -77,7 +79,7 @@ void	parse_input(t_envl *e, int argc, char **argv);
 
 //1_setup_2.c
 void	init_envelopestruct(t_envl *e);
-bool	init_mutexes(t_envl *e);
+void	open_sharedsemaphores(t_envl *e);
 bool	init_philostructs(t_envl *e);
 
 //1_setup_3.c

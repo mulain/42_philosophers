@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/04 08:50:18 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 10:03:42 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	init_envelopestruct(t_envl *e)
 {
 	int		offset;
 
-	e->sem_init = false;
+	e->init = false;
 	e->pids = malloc(e->n_philosophers * sizeof(pid_t));
 	if (!e->pids)
 		exec_error_exit(ERR_MALLOC, e);
@@ -31,6 +31,46 @@ void	init_envelopestruct(t_envl *e)
 		e->philofunction = philosopher_solo;
 	else
 		e->philofunction = philosopher;
+}
+
+/*
+jacob sorber what is a semaphore
+9.30
+Apparently, it is good practice to unlink semaphores before opening them to
+make sure they are not used by a previous process. So start by unlinking,
+then opening.
+-	allsated is a counter semaphore that starts at 0 and gets posted to
+	when a philosopher has eaten enough times. At that point the main
+	process, that has been waiting for allsated to reach n_philosopher,
+	terminates the simulation
+-	print is a binary semaphore that controls access to the broadcast function.
+	This is to not mix up timestamps - an issue that exists on my system (Win 11
+	WSL 2 Ubuntu), but apparently not on school iMacs.
+-	stop is a binary semaphore that controls access to the function that will
+	terminate the simulation.
+-	forks is a resource semaphore that gets depleted by the eating philosophers.
+*/
+void	open_sharedsemaphores(t_envl *e)
+{
+	sem_t	*allsated;
+	sem_t	*print;
+	sem_t	*stop;
+	sem_t	*forks;
+	//sem_t	*lasteat;
+
+	sem_unlink("/allsated");
+	sem_unlink("/print");
+	sem_unlink("/stop");
+	sem_unlink("/forks");
+	sem_unlink("/lasteat");
+	allsated = sem_open("/allsated", O_CREAT, 0660, 0);
+	print = sem_open("/print", O_CREAT, 0660, 1);
+	stop = sem_open("/stop", O_CREAT, 0660, 0);
+	print = sem_open("/forks", O_CREAT, 0660, e->n_philosophers);
+	if (allsated == SEM_FAILED || print == SEM_FAILED || stop == SEM_FAILED
+		|| forks == SEM_FAILED)
+		exec_error_exit(ERR_SEM_OPEN);
+	//lasteat = semopen("/lasteat", 0660, 1);
 }
 
 bool	init_mutexes(t_envl *e)

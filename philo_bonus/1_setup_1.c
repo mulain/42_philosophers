@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/04 08:04:21 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/05 12:31:51 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,9 @@ void	setup(t_envl *e, int argc, char **argv)
 	check_input(argc, argv);
 	parse_input(e, argc, argv);
 	init_envelopestruct(e);
-	if (!init_mutexes(e))
-		return (false);
+	init_semaphores(e);
 	if (!init_philostructs(e))
 		return (false);
-	return (true);
 }
 
 /*

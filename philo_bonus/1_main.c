@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/04 20:18:39 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/05 12:28:33 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,14 @@ int	main(int argc, char **argv)
 	while (i < e.n_philosophers)
 	{
 		e.philo.id = i + 1;
-		e.philo.
 		e.pids[i] = fork();
 		if (e.pids[i] == -1)
-			error_msg_exit(e, "fork");
+			exec_error_exit("Error: fork\n", &e);
+		if (e.pids[i] == 0)
+		{
+			e.philofunction(&e);
+			exit(EXIT_SUCCESS);
+		}
 		i++;
 	}
 
