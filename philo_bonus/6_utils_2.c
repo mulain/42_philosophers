@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 10:13:51 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 12:09:02 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 16:12:08 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,20 @@ Care: It doesn't deal with unsigned ints, only up to MAX_INT.
 char	*zero_or_pos_itoa(int n)
 {
 	int		i;
+	int		n_copy;
 	char	*out;
 
 	if (n == 0)
 		return (ft_strdup("0"));
 	i = 0;
-	while (n > 0)
+	n_copy = n;
+	while (n_copy > 0)
 	{
-		n /= 10;
+		n_copy /= 10;
 		i++;
 	}
-	out = ft_calloc(i + 1, sizeof(char));
+	out = malloc((i + 1) * sizeof(char));
+	out[i] = 0;
 	i--;
 	while (n > 0)
 	{
@@ -37,10 +40,11 @@ char	*zero_or_pos_itoa(int n)
 		i--;
 		n /= 10;
 	}
+	printf("itoa mod (wont print 0 cause gets returned before):%s\n", out);
 	return (out);
 }
 
-char	*ft_strdup(const char *s)
+char	*ft_strdup(char *s)
 {
 	char	*c;
 	int		i;

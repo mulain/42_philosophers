@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 13:55:46 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 16:14:18 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,15 @@ typedef struct envelope
 	int			id;
 	time_t		starttime;
 	pid_t		*pids;
-	sem_t		**last_eat_locks;
+	bool		stop; //prolly not needed, cuase semt stop
+	bool		sem_init;
+	void		*(*philofunction)(); // adapt this to not need casting
 	char		**le_locks_names;
+	sem_t		**last_eat_locks;
 	sem_t		*allsated;
 	sem_t		*printlock;
 	sem_t		*stoplock;
 	sem_t		*forks;
-	bool		stop; //prolly not needed, cuase semt stop
-	bool		sem_init;
-	void		*(*philofunction)(); // adapt this to not need casting
 }	t_envl;
 
 //0_main.c
@@ -64,6 +64,8 @@ int		main(int argc, char **argv);
 bool	launch_threads(t_envl *e);
 bool	collect_threads(t_envl *e);
 void	shutdown(t_envl *e);
+void	free2darray_char(char **array);
+void	unlink_semaphores(t_envl *e);
 time_t	get_time_ms(void);
 
 //1_setup_1.c
@@ -81,27 +83,27 @@ int		calc_starttime(t_envl *e);
 int		is_one_to_maxphilo(char *input);
 int		is_digits(char *input);
 int		is_intsize(char *argv);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-int		ft_atoi(const char *nptr);
+int		ft_strncmp(char *s1, char *s2, size_t n);
+int		ft_atoi(char *nptr);
 
 //2_process_philosopher_1.c
-void	philosopher(void);
-void	philosopher_solo(void);
+void	*philosopher(void);
+void	*philosopher_solo(void);
 
 //6_utils_1.c
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	*ft_memset(void *s, int c, size_t n);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+size_t	ft_strlcpy(char *dst, char *src, size_t size);
 int		ft_strlen(char *string);
 
 //6_utils_2.c
 char	*zero_or_pos_itoa(int n);
-char	*ft_strdup(const char *s);
+char	*ft_strdup(char *s);
 
 //8_errors.c
 void	input_error_exit(char *msg);
 void	input_error_philnumber_exit(char *msg);
-bool	exec_error_exit(char *msg, t_envl *e);
+void	exec_error_exit(char *msg, t_envl *e);
 
 #endif

@@ -6,11 +6,11 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:32:22 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 11:19:30 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 16:17:15 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philosophers_bonus.h"
 
 /*
 Didn't use printf because I wanted to write to std_err.
@@ -34,7 +34,6 @@ void	input_error_philnumber_exit(char *msg)
 void	exec_error_exit(char *msg, t_envl *e)
 {
 	write (2, msg, ft_strlen(msg));
-	write (2, "\n", 1);
 	shutdown(e);
 	exit(EXIT_FAILURE);
 }

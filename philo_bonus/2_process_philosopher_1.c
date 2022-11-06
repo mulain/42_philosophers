@@ -6,19 +6,19 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 13:46:47 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 16:09:01 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philosophers_bonus.h"
 
-void	philosopher(void)
+void	*philosopher(void)
 {
 	// set philo id, needs current iteration of int i
-	return ;
+	return (NULL);
 }
 
-void	philosopher_solo(void)
+void	*philosopher_solo(void)
 {
-	return ;
+	return (NULL) ;
 }

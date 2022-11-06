@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_main.c                                           :+:      :+:    :+:   */
+/*   0_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/05 12:28:33 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 16:03:30 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 	i = 0;
 	while (i < e.n_philosophers)
 	{
-		e.philo.id = i + 1;
+		e.id = i + 1;
 		e.pids[i] = fork();
 		if (e.pids[i] == -1)
 			exec_error_exit("Error: fork\n", &e);
@@ -38,28 +38,45 @@ int	main(int argc, char **argv)
 
 void	shutdown(t_envl *e)
 {
-	int		i;
+	
 
 	if (e->sem_init)
 	{
-		pthread_mutex_destroy(&e->global.printlock);
-		pthread_mutex_destroy(&e->global.stoplock);
-		i = 0;
-		while (i < e->n_philosophers)
-		{
-			pthread_mutex_destroy(&e->forks[i]);
-			pthread_mutex_destroy(&e->last_eat_locks[i]);
-			i++;
-		}
+		unlink_semaphores(e);
 	}
-	if (e->forks)
-		free(e->forks);
-	if (e->last_eat_locks)
-		free(e->last_eat_locks);
-	if (e->threads)
-		free(e->threads);
-	if (e->philo)
-		free(e->philo);
+	free2darray_char(e->le_locks_names);
+}
+
+void	unlink_semaphores(t_envl *e)
+{
+	int		i;
+	//close semaphores also here or elsewhere or unlink is enuff?
+
+	sem_unlink("/allsated");
+	sem_unlink("/print");
+	sem_unlink("/stop");
+	sem_unlink("/forks");
+	i = 0;
+	while (i < e->n_philosophers)
+	{
+		sem_unlink(e->le_locks_names[i]);
+		i++;
+	}
+}
+
+void	free2darray_char(char **array)
+{
+	int		i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
 }
 
 time_t	get_time_ms(void)

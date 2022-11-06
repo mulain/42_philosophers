@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 13:56:10 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 16:08:21 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,24 @@ void	init_envelopestruct(t_envl *e)
 	e->le_locks_names = malloc(e->n_philosophers * sizeof(char *));
 	if (!e->le_locks_names)
 		exec_error_exit(ERR_MALLOC, e);
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		e->le_locks_names[i] = ft_strjoin("/last_eat", zero_or_pos_itoa(i));
-		i++;
-	}
 	e->stop = false;
 	e->sem_init = false;
 	if (e->n_philosophers == 1)
 		e->philofunction = philosopher_solo;
 	else
 		e->philofunction = philosopher;
+	i = 0;
+	while (i < e->n_philosophers)
+	{
+		e->le_locks_names[i] = ft_strjoin("/last_eat", zero_or_pos_itoa(i));
+		if (!e->le_locks_names[i])
+			exec_error_exit(ERR_MALLOC, e);
+		i++;
+	}
 }
 
 /*
-Apparently, it is good practice to unlink semaphores before opening them to
+It is good practice to unlink semaphores before opening them to
 make sure they are not used by a previous process. So start by unlinking,
 then opening.
 -	The semaphores named in the 2d array e-lasteatnames are the locks for
@@ -80,50 +82,11 @@ void	open_semaphores(t_envl *e)
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-		sem_open(e->le_locks_names[i], O_CREAT, 0644, 1);
-		if (e->le_locks_names[i] == SEM_FAILED)
+		e->last_eat_locks[i] = sem_open(e->le_locks_names[i], O_CREAT, 0644, 1);
+		if (e->last_eat_locks[i] == SEM_FAILED)
 			exec_error_exit(ERR_SEM_OPEN, e);
 		i++;
 	}
-}
-
-void	unlink_semaphores(t_envl *e)
-{
-	int		i;
-
-	sem_unlink("/allsated");
-	sem_unlink("/print");
-	sem_unlink("/stop");
-	sem_unlink("/forks");
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		sem_unlink(e->le_locks_names[i]);
-		i++;
-	}
-}
-
-bool	init_philostructs(t_envl *e)
-{
-	int		i;
-
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		e->philo[i].id = i + 1;
-		e->philo[i].common = &e->common;
-		e->philo[i].fork_right = &e->forks[i];
-		if (i == 0)
-			e->philo[i].fork_left = &e->forks[e->n_philosophers - 1];
-		else
-			e->philo[i].fork_left = &e->forks[i - 1];
-		e->philo[i].last_eat = e->common.starttime;
-		e->philo[i].death_time = e->common.starttime + e->common.time_to_die;
-		e->philo[i].last_eat_lock = &e->last_eat_locks[i];
-		e->philo[i].times_eaten = 0;
-		i++;
-	}
-	return (true);
 }
 
 int	calc_starttime(t_envl *e)
