@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/04 08:09:32 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 09:30:12 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 bool	init_envelopestruct(t_envl *e)
 {
-	int		offset;
-
 	e->threads = NULL;
 	e->forks = NULL;
 	e->mutex_init = false;
@@ -23,12 +21,7 @@ bool	init_envelopestruct(t_envl *e)
 	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
 	if (!e->threads)
 		return (exec_error_exit(ERR_MALLOC, e));
-	offset = e->n_philosophers * 20;
-	if (offset > 1000)
-		offset = 1000;
-	if (offset < 100)
-		offset = 100;
-	e->global.starttime = get_time_ms() + offset;
+	e->global.starttime = calc_starttime(e);
 	e->global.stop = false;
 	if (e->n_philosophers == 1)
 		e->philofunction = philosopher_solo;
@@ -85,4 +78,16 @@ bool	init_philostructs(t_envl *e)
 		i++;
 	}
 	return (true);
+}
+
+int	calc_starttime(t_envl *e)
+{
+	int		offset;
+
+	offset = e->n_philosophers * 20;
+	if (offset > 1000)
+		offset = 1000;
+	if (offset < 100)
+		offset = 100;
+	return (get_time_ms() + offset);
 }
