@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 10:03:42 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 11:05:31 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,20 @@ then opening.
 */
 void	open_sharedsemaphores(t_envl *e)
 {
-	sem_t	*allsated;
-	sem_t	*print;
-	sem_t	*stop;
-	sem_t	*forks;
+
 	//sem_t	*lasteat;
 
 	sem_unlink("/allsated");
 	sem_unlink("/print");
 	sem_unlink("/stop");
 	sem_unlink("/forks");
-	sem_unlink("/lasteat");
-	allsated = sem_open("/allsated", O_CREAT, 0660, 0);
-	print = sem_open("/print", O_CREAT, 0660, 1);
-	stop = sem_open("/stop", O_CREAT, 0660, 0);
-	print = sem_open("/forks", O_CREAT, 0660, e->n_philosophers);
-	if (allsated == SEM_FAILED || print == SEM_FAILED || stop == SEM_FAILED
-		|| forks == SEM_FAILED)
+	//sem_unlink("/lasteat");
+	e->allsated = sem_open("/allsated", O_CREAT, 0644, 0);
+	e->print = sem_open("/print", O_CREAT, 0644, 1);
+	e->stop = sem_open("/stop", O_CREAT, 0644, 0);
+	e->print = sem_open("/forks", O_CREAT, 0644, e->n_philosophers);
+	if (e->allsated == SEM_FAILED || e->print == SEM_FAILED
+		|| e->stop == SEM_FAILED	|| e->forks == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN);
 	//lasteat = semopen("/lasteat", 0660, 1);
 }

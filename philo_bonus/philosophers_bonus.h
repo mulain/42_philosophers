@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 10:04:29 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 11:04:34 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,9 @@ typedef struct philosopher_process
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			times_to_eat;
+	sem_t		*lasteat;
 	time_t		starttime;
-	sem_t		printlock;
-	sem_t		stoplock;
-	t_global	*global;
-	sem_t		*forks;
 	time_t		last_eat;
-	sem_t		*last_eat_lock;
 	int			times_eaten;
 }	t_philo;
 
@@ -57,9 +53,10 @@ typedef struct envelope
 {
 	int			n_philosophers;
 	pid_t		*pids;
-	sem_t		forks;
-	sem_t		*last_eat_locks;
-	t_global	global;
+	sem_t		*allsated;
+	sem_t		*print;
+	sem_t		*stop;
+	sem_t		*forks;
 	bool		sem_init;
 	t_philo		philo;
 	void		*(*philofunction)();
