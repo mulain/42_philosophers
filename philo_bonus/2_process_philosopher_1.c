@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 19:58:30 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 20:11:42 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	calc_thinktime(t_envl *e)
 /*
 Processes don't have to check for the simulation being stopped because they
 will be killed by main process. So they just wait for time_target.
+
+for pid in $(ps -ef | grep "/philo" | awk '{print $2}'); do kill -9 $pid; done
 */
 void	wait_timetarget(time_t timetarget)
 {
