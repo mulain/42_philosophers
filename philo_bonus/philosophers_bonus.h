@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 16:14:18 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/06 19:01:49 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define ERR_TIMES "<time_to_[...]> and <number_of_times_each_philosopher_must_eat> \
 must be positive integers in int range or zero: >= 0 and < 2147483648.\n"
 # define ERR_MALLOC "Error: malloc\n"
-# define ERR_SEM_OPEN "Error: semopen\n"
+# define ERR_SEM_OPEN "Error: sem_open\n"
 # define ERR_THREAD_CREATE "Error: pthread_create\n"
 # define ERR_THREAD_JOIN "Error: pthread_join\n"
 
@@ -50,7 +50,7 @@ typedef struct envelope
 	pid_t		*pids;
 	bool		stop; //prolly not needed, cuase semt stop
 	bool		sem_init;
-	void		*(*philofunction)(); // adapt this to not need casting
+	void		(*philofunction)(); // adapt this to not need casting
 	char		**le_locks_names;
 	sem_t		**last_eat_locks;
 	sem_t		*allsated;
@@ -87,8 +87,8 @@ int		ft_strncmp(char *s1, char *s2, size_t n);
 int		ft_atoi(char *nptr);
 
 //2_process_philosopher_1.c
-void	*philosopher(void);
-void	*philosopher_solo(void);
+void	philosopher(t_envl *e);
+void	philosopher_solo(t_envl *e);
 
 //6_utils_1.c
 char	*ft_strjoin(char *s1, char *s2);
