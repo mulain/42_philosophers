@@ -6,29 +6,22 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 16:03:56 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 10:38:13 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-/*
-exit function not allowed, so there has to be a return to stop execution if
-necessary.
-*/
 void	setup(t_envl *e, int argc, char **argv)
 {
 	check_input(argc, argv);
 	parse_input(e, argc, argv);
 	init_envelopestruct(e);
+	close_semaphores(e);
+	unlink_semaphores(e);
 	open_semaphores(e);
 }
 
-/*
-input:			philo	n_phil	die		eat		sleep	max_eat
-argv_index:		argv_0	argv_1	argv_2	argv_3	argv_4	argv_5
-argc_value:		argc_1	argc_2	argc_3	argc_4	argc_5	argc_6
-*/
 void	check_input(int argc, char **argv)
 {
 	int		i;

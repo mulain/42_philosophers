@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 21:44:59 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 09:25:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <semaphore.h>
-# include <sys/time.h>
 # include <stdbool.h>
-# include <sys/wait.h>
 # include <signal.h>
 # include <fcntl.h>
+# include <sys/wait.h>
+# include <sys/time.h>
 # include <sys/stat.h>
 
 # define MAX_PHILO "200"
@@ -44,15 +44,14 @@ typedef struct envelope
 	int			time_to_eat;
 	int			time_to_sleep;
 	int			times_to_eat;
-	int			times_eaten;
-	time_t		last_eat;
 	int			id;
+	void		(*philofunction)();
 	time_t		starttime;
+	time_t		last_eat;
+	int			times_eaten;
 	pid_t		*pids;
 	pthread_t	eatmonitor;
 	pthread_t	stopmonitor;
-	bool		sem_init;
-	void		(*philofunction)();
 	char		**le_locks_names;
 	sem_t		**last_eat_locks;
 	sem_t		*allsated;
@@ -66,10 +65,6 @@ int		main(int argc, char **argv);
 void	launch_monitorthreads(t_envl *e);
 void	*eatmonitor(void *arg);
 void	*stopmonitor(void *arg);
-
-void	shutdown(t_envl *e);
-void	free2darray_char(char **array);
-void	unlink_semaphores(t_envl *e);
 time_t	get_time_ms(void);
 
 //1_setup_1.c
@@ -79,9 +74,8 @@ void	parse_input(t_envl *e, int argc, char **argv);
 
 //1_setup_2.c
 void	init_envelopestruct(t_envl *e);
-void	open_semaphores(t_envl *e);
-bool	init_philostructs(t_envl *e);
 time_t	calc_starttime(t_envl *e);
+void	set_philofunction(t_envl *e);
 
 //1_setup_3.c
 int		is_one_to_maxphilo(char *input);
@@ -102,6 +96,11 @@ void	take_forks(t_envl *e);
 void	release_forks(t_envl *e);
 time_t	broadcast(char *msg, t_envl *e);
 
+//5_semaphores.c
+void	open_semaphores(t_envl *e);
+void	unlink_semaphores(t_envl *e);
+void	close_semaphores(t_envl *e);
+
 //6_utils_1.c
 char	*ft_strjoin(char *s1, char *s2);
 void	*ft_calloc(size_t nmemb, size_t size);
@@ -117,5 +116,9 @@ char	*ft_strdup(char *s);
 void	input_error_exit(char *msg);
 void	input_error_philnumber_exit(char *msg);
 void	exec_error_exit(char *msg, t_envl *e);
+
+//9_shutdown.c
+void	shutdown(t_envl *e);
+void	free2darray_char(char **array);
 
 #endif
