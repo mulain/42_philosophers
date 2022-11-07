@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 12:19:35 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 13:57:02 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,37 +60,28 @@ typedef struct envelope
 	sem_t		*forks;
 }	t_envl;
 
-//0_main.c
+//0_main_1.c
 int		main(int argc, char **argv);
 void	launch_philoforks(t_envl *e);
 void	launch_monitorthreads(t_envl *e);
 void	wait_children(t_envl *e);
 void	join_threads(t_envl *e);
+
+//0_main_2.c
 void	*eatmonitor(void *arg);
 void	*stopmonitor(void *arg);
 time_t	get_time_ms(void);
 
-//1_setup_1.c
+//1_setup.c
 void	setup(t_envl *e, int argc, char **argv);
 void	check_input(int argc, char **argv);
 void	parse_input(t_envl *e, int argc, char **argv);
-
-//1_setup_2.c
 void	init_envelopestruct(t_envl *e);
 time_t	calc_starttime(t_envl *e);
-void	set_philofunction(t_envl *e);
-
-//1_setup_3.c
-int		is_one_to_maxphilo(char *input);
-int		is_digits(char *input);
-int		is_intsize(char *argv);
-int		ft_strncmp(char *s1, char *s2, size_t n);
-int		ft_atoi(char *nptr);
 
 //2_process_philosopher_1.c
 void	philosopher(t_envl *e);
 void	*monitor(void *arg);
-
 void	eat_sleep_think(t_envl *e);
 int		calc_thinktime(t_envl *e);
 void	wait_timetarget(time_t timetarget);
@@ -106,13 +97,20 @@ void	unlink_semaphores(t_envl *e);
 void	close_semaphores(t_envl *e);
 
 //6_utils_1.c
+int		is_one_to_maxphilo(char *input);
+int		is_digits(char *input);
+int		is_intsize(char *argv);
+int		ft_strncmp(char *s1, char *s2, size_t n);
+int		ft_atoi(char *nptr);
+
+//6_utils_2.c
 char	*ft_strjoin(char *s1, char *s2);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	*ft_memset(void *s, int c, size_t n);
 size_t	ft_strlcpy(char *dst, char *src, size_t size);
 int		ft_strlen(char *string);
 
-//6_utils_2.c
+//6_utils_3.c
 char	*zero_or_pos_itoa(int n);
 char	*ft_strdup(char *s);
 
