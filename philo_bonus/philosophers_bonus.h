@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 09:25:35 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 11:07:12 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ must be positive integers in int range or zero: >= 0 and < 2147483648.\n"
 # define ERR_SEM_OPEN "Error: sem_open\n"
 # define ERR_THREAD_CREATE "Error: pthread_create\n"
 # define ERR_THREAD_JOIN "Error: pthread_join\n"
+# define ERR_WAITPID "Error: waitpid\n"
 
 typedef struct envelope
 {
@@ -62,7 +63,10 @@ typedef struct envelope
 
 //0_main.c
 int		main(int argc, char **argv);
+void	launch_philoforks(t_envl *e);
 void	launch_monitorthreads(t_envl *e);
+void	wait_children(t_envl *e);
+void	join_threads(t_envl *e);
 void	*eatmonitor(void *arg);
 void	*stopmonitor(void *arg);
 time_t	get_time_ms(void);
