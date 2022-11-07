@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:33:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 09:02:48 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:22:12 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 void	shutdown(t_envl *e)
 {
 
+	close_semaphores(e);
+	unlink_semaphores(e);
 	if (e->pids)
 		free (e->pids);
 	if (e->last_eat_locks)
 		free (e->last_eat_locks);
 	free2darray_char(e->le_locks_names);
 	//if (e->sem_init)
-	close_semaphores(e);
-	unlink_semaphores(e);
 }
 
 void	free2darray_char(char **array)

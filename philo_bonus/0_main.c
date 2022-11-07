@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 12:10:55 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:34:18 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ int	main(int argc, char **argv)
 	shutdown(&e);
 }
 
+/*
+The children will never return from executing the philofunction so
+there is no guard against them continuing the execution of the main
+function.
+*/
 void	launch_philoforks(t_envl *e)
 {
 	int		i;
@@ -39,10 +44,7 @@ void	launch_philoforks(t_envl *e)
 		if (e->pids[i] == -1)
 			exec_error_exit("Error: fork\n", e);
 		if (e->pids[i] == 0)
-		{
-			e->philofunction(e);
-			printf("shouldnt be here\n"); //dont forget
-		}
+			philosopher(e);
 		i++;
 	}
 }
@@ -90,6 +92,11 @@ void	*eatmonitor(void *arg)
 
 	e = (t_envl *)arg;
 	wait_timetarget(e->starttime);
+	if (e->times_to_eat == 0)
+	{
+		sem_wait(e->printlock);
+		sem_post(e->stoplock);
+	}
 	i = 0;
 	while (i < e->n_philosophers)
 	{
@@ -120,7 +127,6 @@ void	*stopmonitor(void *arg)
 	e = (t_envl *)arg;
 	i = 0;
 	sem_wait(e->stoplock);
-	printf("stop detected in main\n");
 	while (i < e->n_philosophers)
 	{
 		kill(e->pids[i], SIGKILL);

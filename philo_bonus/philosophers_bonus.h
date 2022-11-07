@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 11:56:06 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:19:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ typedef struct envelope
 	int			time_to_sleep;
 	int			times_to_eat;
 	int			id;
-	void		(*philofunction)();
 	time_t		starttime;
 	time_t		last_eat;
 	int			times_eaten;
@@ -95,7 +94,6 @@ void	*monitor(void *arg);
 void	eat_sleep_think(t_envl *e);
 int		calc_thinktime(t_envl *e);
 void	wait_timetarget(time_t timetarget);
-void	philosopher_solo(t_envl *e);
 
 //2_process_philosopher_2.c
 void	take_forks(t_envl *e);

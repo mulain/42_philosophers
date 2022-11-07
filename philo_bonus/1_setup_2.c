@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 09:23:00 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:28:27 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void	init_envelopestruct(t_envl *e)
 	int		i;
 	char	*i_alpha;
 
-	set_philofunction(e);
 	e->starttime = calc_starttime(e);
 	e->last_eat = e->starttime;
 	e->times_eaten = 0;
 	e->pids = malloc(e->n_philosophers * sizeof(pid_t));
-	e->le_locks_names = malloc(e->n_philosophers * sizeof(char *));
+	e->le_locks_names = NULL; //consistent about init nulling
+	e->le_locks_names = malloc((e->n_philosophers + 1) * sizeof(char *));
 	e->last_eat_locks = malloc(e->n_philosophers * sizeof(sem_t *));
 	if (!e->pids || !e->le_locks_names || !e->last_eat_locks)
 		exec_error_exit(ERR_MALLOC, e);
@@ -45,6 +45,7 @@ void	init_envelopestruct(t_envl *e)
 			exec_error_exit(ERR_MALLOC, e);
 		i++;
 	}
+	e->le_locks_names[i] = NULL;
 }
 
 time_t	calc_starttime(t_envl *e)
@@ -57,12 +58,4 @@ time_t	calc_starttime(t_envl *e)
 	if (offset < 100)
 		offset = 100;
 	return (get_time_ms() + offset);
-}
-
-void	set_philofunction(t_envl *e)
-{
-	if (e->n_philosophers == 1)
-		e->philofunction = philosopher_solo;
-	else
-		e->philofunction = philosopher;
 }

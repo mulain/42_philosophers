@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:52:34 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 10:48:33 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:28:58 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ void	open_semaphores(t_envl *e)
 		i++;
 	}
 	sem_getvalue(e->forks, &semval);
-	printf("semval forks in open function:%i\n", semval);
-	//e->sem_init = true;
 }
 
 void	unlink_semaphores(t_envl *e)

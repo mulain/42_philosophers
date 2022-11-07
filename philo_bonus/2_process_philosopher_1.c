@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 11:54:23 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:17:13 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,9 @@ void	wait_timetarget(time_t timetarget)
 		usleep(100);
 }
 
-void	philosopher_solo(t_envl *e)
+/* void	philosopher_solo(t_envl *e)
 {
-	printf("child: philo id:%i\n", e->id);
-	printf("child eatloc name:%s\n", e->le_locks_names[e->id - 1]);
-	return ;
-}
+	wait_timetarget(e->starttime);
+
+
+} */
