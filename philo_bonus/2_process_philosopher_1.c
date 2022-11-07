@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 13:26:55 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 13:36:25 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,8 @@
 The child process receives its own stack in the while loop in the main, so the
 e.id is unique to the child. Important to remember: the i value is e.id - 1.
 The unique semaphores are named after i, i.e. "/last_eat0", "/last_eat1", etc.
-
 There is no thread_join function because the philos will run indefinitely or
 until killed.
-
-printf("child: philo id:%i\n", e->id);
-printf("child eatloc name:%s\n", e->le_locks_names[e->id - 1]);
 */
 void	philosopher(t_envl *e)
 {
@@ -44,10 +40,11 @@ hunger.
 Waits for the lasteatlock to not create a race condition. This is to
 satisfy the formal project requirements. I don't think it would cause
 any functional problems.
-If philo died, locks the printlock, broadcasts the death, posts to stoplock.
-This will result in the main process stopmonitor ending the simulation.
-If not dead, gives back the last_eat_lock. And sleeps until it's time to
+If not dead, gives back the last_eat_lock and sleeps until it's time to
 start over.
+If philo died, locks the printlock, prints the death, posts to stoplock.
+This will result in the main process stopmonitor ending the simulation.
+Doesn't use the broadcast function because it should not post the printlock.
 */
 void	*monitor(void *arg)
 {
@@ -57,24 +54,24 @@ void	*monitor(void *arg)
 	while (1)
 	{
 		sem_wait(e->last_eat_locks[e->id - 1]);
-		if (get_time_ms() - e->last_eat >= e->time_to_die)
+		if (get_time_ms() - e->last_eat > e->time_to_die)
 		{
 			sem_wait(e->printlock);
 			printf("%li %i died\n", get_time_ms() - e->starttime, e->id);
 			sem_post(e->stoplock);
 		}
 		sem_post(e->last_eat_locks[e->id - 1]);
-		usleep(100);
+		usleep(500);
 	}
 }
 
 /*
-Remember: semaphores are named according to i, which starts at 0.
-But we only have e.id (starting at 1) which is i + 1.
+Semaphores are named according to i, which starts at 0. We only have e.id
+(starting at 1) which is i + 1. So reference to sem is e.id - 1.
 At the moment <times_to_eat> is reached, posts to semaphore allsated once.
 Only posts when times_eaten is equal to <times_to_eat>, so only ever posts once
-per process. The main process sem_waits for n_philosophers, so it will "know"
-when all have eaten enough.
+per process. The main process sem_waits for n_philosophers, so it will only be
+able to continue when all have eaten enough.
 */
 void	eat_sleep_think(t_envl *e)
 {
@@ -108,10 +105,8 @@ int	calc_thinktime(t_envl *e)
 }
 
 /*
-Processes don't have to check for the simulation being stopped because they
+Child Processes don't have to check for the simulation being stopped because they
 will be killed by main process. So they just wait for time_target.
-
-for pid in $(ps -ef | grep "/philo" | awk '{print $2}'); do kill -9 $pid; done
 */
 void	wait_timetarget(time_t timetarget)
 {
