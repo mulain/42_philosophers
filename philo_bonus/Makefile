@@ -6,7 +6,7 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/02 17:30:04 by wmardin           #+#    #+#              #
-#    Updated: 2022/11/07 09:06:29 by wmardin          ###   ########.fr        #
+#    Updated: 2022/11/07 13:28:33 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,15 +16,15 @@ ERRORFLAGS = -Wall -Wextra -Werror
 DEFINE =
 
 NAME =	philo_bonus
-SRC =	0_main.c\
-		1_setup_1.c\
-		1_setup_2.c\
-		1_setup_3.c\
+SRC =	0_main_1.c\
+		0_main_2.c\
+		1_setup.c\
 		2_process_philosopher_1.c\
 		2_process_philosopher_2.c\
 		5_semaphores.c\
 		6_utils_1.c\
 		6_utils_2.c\
+		6_utils_3.c\
 		8_errors.c\
 		9_shutdown.c
 

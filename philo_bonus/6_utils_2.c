@@ -5,53 +5,81 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/03 10:13:51 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 19:05:01 by wmardin          ###   ########.fr       */
+/*   Created: 2022/11/06 11:16:29 by wmardin           #+#    #+#             */
+/*   Updated: 2022/11/07 13:27:53 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-/*
-Slimmed down version of ft_itoa that only deals with ints >= 0.
-Care: It doesn't deal with unsigned ints, only up to MAX_INT.
-*/
-char	*zero_or_pos_itoa(int n)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	int		i;
-	int		n_copy;
+	int		len_s1;
+	int		len_s2;
 	char	*out;
 
-	if (n == 0)
-		return (ft_strdup("0"));
-	i = 0;
-	n_copy = n;
-	while (n_copy > 0)
-	{
-		n_copy /= 10;
-		i++;
-	}
-	out = malloc((i + 1) * sizeof(char));
-	out[i] = 0;
-	i--;
-	while (n > 0)
-	{
-		out[i] = n % 10 + 48;
-		i--;
-		n /= 10;
-	}
+	if (!s1 || !s2)
+		return (NULL);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	out = ft_calloc(len_s1 + len_s2 + 1, sizeof(char));
+	if (!out)
+		return (NULL);
+	ft_strlcpy(out, s1, len_s1 + 1);
+	ft_strlcpy(out + len_s1, s2, len_s2 + 1);
 	return (out);
 }
 
-char	*ft_strdup(char *s)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	char	*c;
+	void	*p;
+
+	if (size == __SIZE_MAX__)
+		return (NULL);
+	p = malloc(nmemb * size);
+	if (!p)
+		return (NULL);
+	ft_memset(p, 0, nmemb * size);
+	return (p);
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t	i;
+	char	*p;
+
+	p = (char *) s;
+	i = 0;
+	while (i < n)
+	{
+		p[i] = c;
+		i++;
+	}
+	return (s);
+}
+
+size_t	ft_strlcpy(char *dst, char *src, size_t size)
+{
+	size_t	i;
+
+	i = 0;
+	if (size < 1)
+		return (ft_strlen(src));
+	while (src[i] && i < size - 1)
+	{
+		dst[i] = src[i];
+		++i;
+	}
+	dst[i] = 0;
+	return (ft_strlen(src));
+}
+
+int	ft_strlen(char *string)
+{
 	int		i;
 
-	i = ft_strlen(s) + 1;
-	c = malloc(i);
-	if (!c)
-		return (NULL);
-	ft_strlcpy(c, s, i);
-	return (c);
+	i = 0;
+	while (string[i])
+		i++;
+	return (i);
 }

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 12:48:01 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 13:26:55 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,3 @@ void	wait_timetarget(time_t timetarget)
 	while (get_time_ms() < timetarget)
 		usleep(100);
 }
-
-/* void	philosopher_solo(t_envl *e)
-{
-	wait_timetarget(e->starttime);
-
-
-} */

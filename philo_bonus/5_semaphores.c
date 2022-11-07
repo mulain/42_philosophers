@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:52:34 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 12:28:58 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 13:27:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	open_semaphores(t_envl *e)
 {
 	int		i;
 	int		semval;
-
 
 	e->allsated = sem_open("/allsated", O_CREAT | O_EXCL, 0644, 0);
 	e->printlock = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
