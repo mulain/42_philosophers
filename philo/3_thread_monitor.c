@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:37:17 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 08:54:13 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 13:36:50 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ bool	check_death(t_envl *e, int i)
 
 	dieded = false;
 	pthread_mutex_lock(e->philo[i].last_eat_lock);
-	if (get_time_ms() - e->philo[i].last_eat >= e->global.time_to_die)
+	if (get_time_ms() - e->philo[i].last_eat > e->global.time_to_die)
 	{
 		set_stop(e);
 		printf("%li %i died\n",
