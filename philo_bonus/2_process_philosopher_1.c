@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 12:17:13 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:48:01 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	calc_thinktime(t_envl *e)
 	sem_wait(e->last_eat_locks[e->id - 1]);
 	time_to_think = e->time_to_die - get_time_ms() + e->last_eat;
 	sem_post(e->last_eat_locks[e->id - 1]);
-	time_to_think *= 0.8;
+	time_to_think *= 0.5;
 	return (time_to_think);
 }
 

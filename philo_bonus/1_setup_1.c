@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 10:38:13 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:40:33 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	setup(t_envl *e, int argc, char **argv)
 	check_input(argc, argv);
 	parse_input(e, argc, argv);
 	init_envelopestruct(e);
-	close_semaphores(e);
+	//close_semaphores(e);
 	unlink_semaphores(e);
 	open_semaphores(e);
 }
