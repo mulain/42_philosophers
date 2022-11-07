@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:52:34 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 13:27:35 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 13:41:20 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 It is good practice to unlink semaphores before opening them to
 make sure they are not used by a previous process. So start by unlinking,
-then opening.
+then opening in main.
 Flags: O_CREAT for create semaphore, O_EXCL makes sem_open return an error
 if the semaphore to be created already exists. Highly unlikely since we
 closed them before and named them specifically, but apparently still good
@@ -37,7 +37,6 @@ practice.
 void	open_semaphores(t_envl *e)
 {
 	int		i;
-	int		semval;
 
 	e->allsated = sem_open("/allsated", O_CREAT | O_EXCL, 0644, 0);
 	e->printlock = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
@@ -55,7 +54,6 @@ void	open_semaphores(t_envl *e)
 			exec_error_exit(ERR_SEM_OPEN, e);
 		i++;
 	}
-	sem_getvalue(e->forks, &semval);
 }
 
 void	unlink_semaphores(t_envl *e)

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 13:27:12 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 13:38:54 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	release_forks(t_envl *e)
 printf itself doesn't require a mutex guard in order for its printing to not be
 interrupted by another print. The mutex is to prevent a call with a higher
 timestamp from being printed before a call with a lower timestamp.
+Also used as a tool to stop any process from printing by blocking the semaphore.
 */
 time_t	broadcast(char *msg, t_envl *e)
 {
