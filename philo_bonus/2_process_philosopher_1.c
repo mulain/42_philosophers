@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 11:14:27 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 11:54:23 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,18 @@ The child process receives its own stack in the while loop in the main, so the
 e.id is unique to the child. Important to remember: the i value is e.id - 1.
 The unique semaphores are named after i, i.e. "/last_eat0", "/last_eat1", etc.
 
+There is no thread_join function because the philos will run indefinitely or
+until killed.
+
 printf("child: philo id:%i\n", e->id);
 printf("child eatloc name:%s\n", e->le_locks_names[e->id - 1]);
 */
 void	philosopher(t_envl *e)
 {
+	pthread_t		monitor_id;
 
-	//make deathchecker thread
+	if (pthread_create(&monitor_id, NULL, monitor, e))
+		exec_error_exit(ERR_THREAD_CREATE, e);
 	wait_timetarget(e->starttime);
 	if (e->id % 2 == 0)
 		usleep(800);
@@ -31,6 +36,36 @@ void	philosopher(t_envl *e)
 		usleep(200);
 	while (1)
 		eat_sleep_think(e);
+}
+
+/*
+Runs a continuous loop that checks if the philosopher has died from
+hunger.
+Waits for the lasteatlock to not create a race condition. This is to
+satisfy the formal project requirements. I don't think it would cause
+any functional problems.
+If philo died, locks the printlock, broadcasts the death, posts to stoplock.
+This will result in the main process stopmonitor ending the simulation.
+If not dead, gives back the last_eat_lock. And sleeps until it's time to
+start over.
+*/
+void	*monitor(void *arg)
+{
+	t_envl		*e;
+
+	e = (t_envl *)arg;
+	while (1)
+	{
+		sem_wait(e->last_eat_locks[e->id - 1]);
+		if (get_time_ms() - e->last_eat >= e->time_to_die)
+		{
+			sem_wait(e->printlock);
+			printf("%li %i died\n", get_time_ms() - e->starttime, e->id);
+			sem_post(e->stoplock);
+		}
+		sem_post(e->last_eat_locks[e->id - 1]);
+		usleep(100);
+	}
 }
 
 /*

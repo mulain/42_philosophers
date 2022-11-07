@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 11:38:29 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 12:10:55 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 
 /*
 for pid in $(ps -ef | grep "philo" | awk '{print $2}'); do kill -9 $pid; done
-
-else not needed i gueeees? since the children will end in philo
-termination thread: check stop semaphore (gets set by children if starvation)
-termination thread2: check sated varibale and set stop if sated.
-if stop, take printlock to stop msgs (better: child should broadcast its death
-and never post back the printlock),
-kill children, shutdown.
 */
 int	main(int argc, char **argv)
 {
@@ -49,7 +42,6 @@ void	launch_philoforks(t_envl *e)
 		{
 			e->philofunction(e);
 			printf("shouldnt be here\n"); //dont forget
-			exit(EXIT_SUCCESS);
 		}
 		i++;
 	}
@@ -86,10 +78,10 @@ void	join_threads(t_envl *e)
 }
 
 /*
-Keeps waiting (reducing) the allsated semaphore until all philosophers
+Keeps waiting on (reducing) the allsated semaphore until all philosophers
 have posted to it once.
 Then waits on the printlock and doesn't post it again so no further broadcasts
-are possible (just to be thorough).
+are possible. Finally sets the stoplock to signal the end of the simulation.
 */
 void	*eatmonitor(void *arg)
 {
@@ -107,13 +99,18 @@ void	*eatmonitor(void *arg)
 	sem_wait(e->printlock);
 	sem_post(e->stoplock);
 	return (NULL);
-	// what if this isent reachad, will the thread be joind?
 }
 
 /*
 Waits for the binary semaphore stoplock to be available (i.e. get posted once).
 That means a stop condition has been reached and the simulation should end.
 Kills the child processes and returns.
+If the stop signal was sent from a philo process (death of hunger), the other
+monitor thread in the main process, the eatenenough_checker, will still be stuck
+at its semaphore.
+Sending a signal to kill it is not allowed (pthread_cancel). So the stopmonitor
+posts n_philosophers to the eatmonitors semaphore which will allow it to
+continue. It also needs the printlock to terminate, so that is also posted.
 */
 void	*stopmonitor(void *arg)
 {
@@ -127,8 +124,10 @@ void	*stopmonitor(void *arg)
 	while (i < e->n_philosophers)
 	{
 		kill(e->pids[i], SIGKILL);
+		sem_post(e->allsated);
 		i++;
 	}
+	sem_post(e->printlock);
 	return (NULL);
 }
 

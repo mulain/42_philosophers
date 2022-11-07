@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 11:07:12 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 11:56:06 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int		ft_atoi(char *nptr);
 
 //2_process_philosopher_1.c
 void	philosopher(t_envl *e);
+void	*monitor(void *arg);
+
 void	eat_sleep_think(t_envl *e);
 int		calc_thinktime(t_envl *e);
 void	wait_timetarget(time_t timetarget);
