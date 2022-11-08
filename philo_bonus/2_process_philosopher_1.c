@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 13:36:25 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/07 18:12:38 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	*monitor(void *arg)
 			sem_post(e->stoplock);
 		}
 		sem_post(e->last_eat_locks[e->id - 1]);
-		usleep(500);
+		usleep(1000);
 	}
 }
 

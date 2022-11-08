@@ -6,12 +6,19 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:03:05 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 13:26:32 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/08 09:42:13 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
+/*
+To do:
+- Speed issues bonus
+- Kill child: cleanup?
+- Data races: how to test for processes?
+
+*/
 int	main(int argc, char **argv)
 {
 	t_envl		e;
