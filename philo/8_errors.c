@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:32:22 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/02 11:05:30 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/11 15:58:35 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,35 @@
 Didn't use printf because I wanted to write to std_err.
 Other useful functions to write to std_err not allowed.
 Return is necessary to terminate the main (exit not allowed).
+Storing write return in retval and voiding it to silence warnings
+when compiling with -O2 / -O3.
 */
 bool	input_error_exit(char *msg)
 {
-	write (2, msg, ft_strlen(msg));
+	int		retval;
+
+	retval = write (2, msg, ft_strlen(msg));
+	(void)retval;
 	return (false);
 }
 
 bool	input_error_philnumber_exit(char *msg)
 {
-	write (2, msg, ft_strlen(msg));
-	write (2, MAX_PHILO, ft_strlen(MAX_PHILO));
-	write (2, ".\n", 2);
+	int		retval;
+
+	retval = write (2, msg, ft_strlen(msg));
+	retval = write (2, MAX_PHILO, ft_strlen(MAX_PHILO));
+	retval = write (2, ".\n", 2);
+	(void)retval;
 	return (false);
 }
 
 bool	exec_error_exit(char *msg, t_envl *e)
 {
-	write (2, msg, ft_strlen(msg));
-	write (2, "\n", 1);
+	int		retval;
+
+	retval = write (2, msg, ft_strlen(msg));
+	(void)retval;
 	shutdown(e);
 	return (false);
 }
