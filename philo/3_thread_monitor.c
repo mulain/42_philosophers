@@ -6,12 +6,19 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:37:17 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 13:36:50 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/12 08:18:12 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+/*
+Googled a neat solution for testing if only one element of a group doesn't
+conform (here: isn't true):
+Set return value to true, loop through group, only modify return value
+if checked element is false. That way only returns true if all values are
+true. Returns false if only one value is false.
+*/
 void	*monitor(void *arg)
 {
 	t_envl	*e;
