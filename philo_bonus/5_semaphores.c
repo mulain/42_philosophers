@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:52:34 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 13:41:20 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/11 20:01:56 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,9 @@ Flags: O_CREAT for create semaphore, O_EXCL makes sem_open return an error
 if the semaphore to be created already exists. Highly unlikely since we
 closed them before and named them specifically, but apparently still good
 practice.
--	The semaphores named in the 2d array e-lasteatnames are the locks for
-	reading / writing to the eat associated variables. See comment on
-	init_envelopestruct for why this approach was chosen.
--	allsated is a counter semaphore that starts at 0 and gets posted to
+-	eaten_enough is a resource semaphore that starts at 0 and gets posted to
 	when a philosopher has eaten enough times. At that point the main
-	process, that has been waiting for allsated to reach n_philosopher,
+	process, that has been waiting for eaten_enough to reach n_philosopher,
 	terminates the simulation
 -	print is a binary semaphore that controls access to the broadcast function.
 	This is to not mix up timestamps - an issue that exists on my system (Win 11
@@ -34,56 +31,36 @@ practice.
 	terminate the simulation.
 -	forks is a resource semaphore that gets depleted by the eating philosophers.
 */
-void	open_semaphores(t_envl *e)
+void	open_semaphores_global(t_envl *e)
 {
-	int		i;
-
-	e->allsated = sem_open("/allsated", O_CREAT | O_EXCL, 0644, 0);
-	e->printlock = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
-	e->stoplock = sem_open("/stop", O_CREAT | O_EXCL, 0644, 0);
-	e->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, e->n_philosophers);
-	if (e->allsated == SEM_FAILED || e->printlock == SEM_FAILED
-		|| e->stoplock == SEM_FAILED || e->forks == SEM_FAILED)
+	e->eaten_enough = sem_open("/eaten_enough", O_CREAT | O_EXCL, 0644, 0);
+	if (e->eaten_enough == SEM_FAILED)
+		exec_error_exit("knudel\n", e);
+	e->print = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
+	if (e->print == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		e->last_eat_locks[i] = sem_open(e->le_locks_names[i],
-				O_CREAT | O_EXCL, 0644, 1);
-		if (e->last_eat_locks[i] == SEM_FAILED)
-			exec_error_exit(ERR_SEM_OPEN, e);
-		i++;
-	}
+	e->stop_sim = sem_open("/stop", O_CREAT | O_EXCL, 0644, 0);
+	if (e->stop_sim == SEM_FAILED)
+		exec_error_exit(ERR_SEM_OPEN, e);
+	e->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, e->n_philosophers);
+	if (e->forks == SEM_FAILED)
+		exec_error_exit(ERR_SEM_OPEN, e);
 }
 
 void	unlink_semaphores(t_envl *e)
 {
-	int		i;
-
-	sem_unlink("/allsated");
+	(void)e;
+	sem_unlink("/eaten_enough");
 	sem_unlink("/print");
 	sem_unlink("/stop");
 	sem_unlink("/forks");
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		sem_unlink(e->le_locks_names[i]);
-		i++;
-	}
 }
 
 void	close_semaphores(t_envl *e)
 {
-	int		i;
-
-	sem_close(e->allsated);
-	sem_close(e->printlock);
-	sem_close(e->stoplock);
+	(void)e;
+	sem_close(e->eaten_enough);
+	sem_close(e->print);
+	sem_close(e->stop_sim);
 	sem_close(e->forks);
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		sem_close(e->last_eat_locks[i]);
-		i++;
-	}
 }

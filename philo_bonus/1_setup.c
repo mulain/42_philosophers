@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/07 18:01:30 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/12 10:08:14 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	setup(t_envl *e, int argc, char **argv)
 	parse_input(e, argc, argv);
 	init_envelopestruct(e);
 	unlink_semaphores(e);
-	open_semaphores(e);
+	open_semaphores_global(e);
 }
 
 void	check_input(int argc, char **argv)
@@ -68,28 +68,12 @@ Array is NULL terminated to be easier to cycle through for shutdown function.
 */
 void	init_envelopestruct(t_envl *e)
 {
-	int		i;
-	char	*i_alpha;
-
 	e->starttime = calc_starttime(e);
 	e->last_eat = e->starttime;
 	e->times_eaten = 0;
 	e->pids = malloc(e->n_philosophers * sizeof(pid_t));
-	e->le_locks_names = malloc((e->n_philosophers + 1) * sizeof(char *));
-	e->last_eat_locks = malloc(e->n_philosophers * sizeof(sem_t *));
-	if (!e->pids || !e->le_locks_names || !e->last_eat_locks)
+	if (!e->pids)
 		exec_error_exit(ERR_MALLOC, e);
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		i_alpha = zero_or_pos_itoa(i);
-		e->le_locks_names[i] = ft_strjoin("/last_eat", i_alpha);
-		free (i_alpha);
-		if (!e->le_locks_names[i])
-			exec_error_exit(ERR_MALLOC, e);
-		i++;
-	}
-	e->le_locks_names[i] = NULL;
 }
 
 time_t	calc_starttime(t_envl *e)
@@ -97,9 +81,9 @@ time_t	calc_starttime(t_envl *e)
 	int		offset;
 
 	offset = e->n_philosophers * 20;
-	if (offset > 1000)
-		offset = 1000;
-	if (offset < 100)
-		offset = 100;
+	/* if (offset > 1000)
+		offset = 1000; */
+	if (offset < 500)
+		offset = 500;
 	return (get_time_ms() + offset);
 }

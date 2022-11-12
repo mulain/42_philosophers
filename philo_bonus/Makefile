@@ -6,12 +6,12 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/02 17:30:04 by wmardin           #+#    #+#              #
-#    Updated: 2022/11/07 13:28:33 by wmardin          ###   ########.fr        #
+#    Updated: 2022/11/11 15:56:44 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
-CFLAGS = -pthread
+CFLAGS = -pthread -g -O3
 ERRORFLAGS = -Wall -Wextra -Werror
 DEFINE =
 
