@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:32:22 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/11 16:00:01 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/13 06:29:11 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 Didn't use printf because I wanted to write to std_err.
 Other useful functions to write to std_err not allowed.
 Return is necessary to terminate the main (exit not allowed).
+retval is necessary to silence warnings using -O3 flag.
+(Didn't figure out how to directly void write...)
 */
 void	input_error_exit(char *msg)
 {
