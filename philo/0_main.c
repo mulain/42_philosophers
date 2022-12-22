@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/22 18:59:42 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/22 19:04:37 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,13 @@ int	main(int argc, char **argv)
 	t_envl		e;
 
 	if (setup(&e, argc, argv))
-		return (EXIT_FAILURE);
+		return (1);
 	if (launch_threads(&e))
-		return (EXIT_FAILURE);
+		return (1);
 	if (collect_threads(&e))
-		return (EXIT_FAILURE);
+		return (1);
 	shutdown(&e);
+	return (0);
 }
 
 bool	launch_threads(t_envl *e)
