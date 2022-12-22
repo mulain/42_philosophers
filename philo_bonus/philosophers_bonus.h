@@ -6,13 +6,13 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/12 10:06:34 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/11/12 19:13:27 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_BONUS_H
-
 # define PHILOSOPHERS_BONUS_H
+
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
