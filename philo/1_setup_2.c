@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 21:15:44 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/22 13:13:57 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ time_t	calc_starttime(t_envl *e)
 {
 	int		offset;
 
-	offset = e->n_philosophers * 20;
-	if (offset > 1000)
-		offset = 1000;
-	if (offset < 100)
+	offset = e->n_philosophers * 50;
+	if (offset > 2000)
+		offset = 2000;
+	else if (offset < 100)
 		offset = 100;
 	return (get_time_ms() + offset);
 }
