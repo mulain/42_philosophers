@@ -6,12 +6,12 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/02 17:30:04 by wmardin           #+#    #+#              #
-#    Updated: 2022/11/10 08:37:37 by wmardin          ###   ########.fr        #
+#    Updated: 2022/12/22 18:54:30 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
-CFLAGS = -pthread -O3 -g
+CFLAGS = -pthread -O3
 ERRORFLAGS = -Wall -Wextra -Werror
 DEFINE =
 
@@ -23,7 +23,7 @@ SRC =	0_main.c\
 		2_thread_philosopher_1.c\
 		2_thread_philosopher_2.c\
 		3_thread_monitor.c\
-		8_errors.c
+		8_msg.c
 
 COLOR = \033[94m
 COLOR_END = \033[0m

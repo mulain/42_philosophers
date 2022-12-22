@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/10 08:36:23 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/22 18:59:42 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ int	main(int argc, char **argv)
 {
 	t_envl		e;
 
-	if (!setup(&e, argc, argv))
+	if (setup(&e, argc, argv))
 		return (EXIT_FAILURE);
-	if (!launch_threads(&e))
+	if (launch_threads(&e))
 		return (EXIT_FAILURE);
-	if (!collect_threads(&e))
+	if (collect_threads(&e))
 		return (EXIT_FAILURE);
 	shutdown(&e);
 }
@@ -43,16 +43,16 @@ bool	launch_threads(t_envl *e)
 	int		i;
 
 	if (pthread_create(&e->monitor, NULL, monitor, e))
-		return (exec_error_exit(ERR_THREAD_CREATE, e));
+		return (msg_exec_error(ERR_THREAD_CREATE, e), true);
 	i = 0;
 	while (i < e->n_philosophers)
 	{
 		if (pthread_create(e->threads + i, NULL, e->philofunction,
 				&e->philo[i]))
-			return (exec_error_exit(ERR_THREAD_CREATE, e));
+			return (msg_exec_error(ERR_THREAD_CREATE, e), true);
 		i++;
 	}
-	return (true);
+	return (false);
 }
 
 bool	collect_threads(t_envl *e)
@@ -63,12 +63,12 @@ bool	collect_threads(t_envl *e)
 	while (i < e->n_philosophers)
 	{
 		if (pthread_join(e->threads[i], NULL))
-			return (exec_error_exit(ERR_THREAD_JOIN, e));
+			return (msg_exec_error(ERR_THREAD_JOIN, e), true);
 		i++;
 	}
 	if (pthread_join(e->monitor, NULL))
-		return (exec_error_exit(ERR_THREAD_JOIN, e));
-	return (true);
+		return (msg_exec_error(ERR_THREAD_JOIN, e), true);
+	return (false);
 }
 
 void	shutdown(t_envl *e)

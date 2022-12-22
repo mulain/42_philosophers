@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/03 08:53:54 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/22 19:00:20 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@ necessary.
 */
 bool	setup(t_envl *e, int argc, char **argv)
 {
-	if (!check_input(argc, argv))
-		return (false);
+	if (check_input(argc, argv))
+		return (true);
 	parse_input(e, argc, argv);
-	if (!init_envelopestruct(e))
-		return (false);
-	if (!init_mutexes(e))
-		return (false);
-	if (!init_philostructs(e))
-		return (false);
-	return (true);
+	if (init_envelopestruct(e))
+		return (true);
+	if (init_mutexes(e))
+		return (true);
+	if (init_philostructs(e))
+		return (true);
+	return (false);
 }
 
 /*
@@ -40,17 +40,17 @@ bool	check_input(int argc, char **argv)
 	int		i;
 
 	if (argc != 5 && argc != 6)
-		return (input_error_exit(ERR_ARG_COUNT));
+		return (msg_input_error(ERR_ARG_COUNT), true);
 	if (!is_one_to_maxphilo(argv[1]))
-		return (input_error_philnumber_exit(ERR_PHILNUMBER));
+		return (msg_input_error_philnumber(ERR_PHILNUMBER), true);
 	i = 2;
 	while (i < argc)
 	{
 		if (!is_digits(argv[i]) || !is_intsize(argv[i]))
-			return (input_error_exit(ERR_TIMES));
+			return (msg_input_error(ERR_TIMES), true);
 		i++;
 	}
-	return (true);
+	return (false);
 }
 
 void	parse_input(t_envl *e, int argc, char **argv)
