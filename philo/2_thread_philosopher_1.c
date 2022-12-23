@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/23 13:17:44 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/23 13:24:39 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,15 +117,9 @@ Returns a bool whose value is based on whether the simulation has stopped.
 */
 bool	wait_timetarget(time_t timetarget, t_philo *p)
 {
-	bool	stopped;
-
-	stopped = check_stopped(p);
-	while (get_time_ms() < timetarget && !stopped)
-	{
+	while (get_time_ms() < timetarget && !check_stopped(p))
 		usleep(100);
-		stopped = check_stopped(p);
-	}
-	return (stopped);
+	return (check_stopped(p));
 }
 
 /*
