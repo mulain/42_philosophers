@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/22 18:20:56 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/23 13:17:44 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ This results in there being 3 dining groups:
 void	*philosopher(void *arg)
 {
 	t_philo				*p;
-	bool				stopped;
+	//bool				stopped;
 
 	p = (t_philo *) arg;
 	if (p->id % 2 == 0)
@@ -49,12 +49,8 @@ void	*philosopher(void *arg)
 		usleep(800);
 	/* if (p->id == 1)
 		usleep(200); */
-	stopped = check_stopped(p);
-	while (!stopped)
-	{
+	while (!check_stopped(p))
 		eat_sleep_think(p);
-		stopped = check_stopped(p);
-	}
 	return (NULL);
 }
 
@@ -143,17 +139,12 @@ should at least live his life as long as he can.
 void	*philosopher_solo(void *arg)
 {
 	t_philo		*p;
-	bool		stopped;
 
 	p = (t_philo *) arg;
 	wait_timetarget(p->global->starttime, p);
 	pthread_mutex_lock(p->fork_right);
 	broadcast("has taken a fork", p);
-	stopped = check_stopped(p);
-	while (!stopped)
-	{
+	while (!check_stopped(p))
 		usleep(100);
-		stopped = check_stopped(p);
-	}
 	return (NULL);
 }
