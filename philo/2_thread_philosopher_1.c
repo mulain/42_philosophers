@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/23 13:24:39 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/24 13:01:07 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ void	*philosopher(void *arg)
 	wait_timetarget(p->global->starttime, p);
 	if (p->id % 2 == 0)
 		usleep(800);
-	/* if (p->id == 1)
-		usleep(200); */
+	if (p->id == 1)
+		usleep(200);
 	while (!check_stopped(p))
 		eat_sleep_think(p);
 	return (NULL);
@@ -66,13 +66,13 @@ void	eat_sleep_think(t_philo *p)
 	time_t		now;
 
 	take_forks(p);
-	if (check_stopped(p))
+	/* if (check_stopped(p))
 	{
 		release_forks(p);
 		return ;
-	}
-	now = broadcast("is eating", p);
+	} */
 	pthread_mutex_lock(p->last_eat_lock);
+	now = broadcast("is eating", p);
 	p->last_eat = now;
 	p->times_eaten++;
 	pthread_mutex_unlock(p->last_eat_lock);
