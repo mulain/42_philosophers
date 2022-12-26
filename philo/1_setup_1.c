@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/22 19:00:20 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/25 19:51:15 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,7 @@ bool	setup(t_envl *e, int argc, char **argv)
 {
 	if (check_input(argc, argv))
 		return (true);
-	parse_input(e, argc, argv);
-	if (init_envelopestruct(e))
-		return (true);
-	if (init_mutexes(e))
+	if (init_envelopestruct(e, argc, argv))
 		return (true);
 	if (init_philostructs(e))
 		return (true);
@@ -51,16 +48,4 @@ bool	check_input(int argc, char **argv)
 		i++;
 	}
 	return (false);
-}
-
-void	parse_input(t_envl *e, int argc, char **argv)
-{
-	e->n_philosophers = ft_atoi(argv[1]);
-	e->global.time_to_die = ft_atoi(argv[2]);
-	e->global.time_to_eat = ft_atoi(argv[3]);
-	e->global.time_to_sleep = ft_atoi(argv[4]);
-	if (argc == 6)
-		e->global.times_to_eat = ft_atoi(argv[5]);
-	else
-		e->global.times_to_eat = -1;
 }

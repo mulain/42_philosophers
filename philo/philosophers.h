@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/22 18:57:56 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/25 19:46:30 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,13 @@ must be positive integers in int range or zero: >= 0 and < 2147483648.\n"
 # define ERR_THREAD_CREATE "Error: pthread_create\n"
 # define ERR_THREAD_JOIN "Error: pthread_join\n"
 
-typedef struct globalinformation
+typedef struct philosopher_thread t_philo;
+typedef struct envelope
 {
+	int					n_philosophers;
+	t_philo				*philo;
+	pthread_t			monitor;
+	bool				mutex_init;
 	int					time_to_die;
 	int					time_to_eat;
 	int					time_to_sleep;
@@ -42,31 +47,28 @@ typedef struct globalinformation
 	time_t				starttime;
 	pthread_mutex_t		printlock;
 	pthread_mutex_t		stoplock;
-}	t_global;
+	void				*(*philofunction)();
+}	t_envl;
 
 typedef struct philosopher_thread
 {
+	pthread_t			thread;
+	pthread_mutex_t		fork;
 	int					id;
 	int					times_eaten;
+	time_t				starttime;
 	time_t				last_eat;
-	t_global			*global;
+	int					time_to_die;
+	int					time_to_eat;
+	int					time_to_sleep;
+	int					times_to_eat;
 	pthread_mutex_t		*fork_right;
 	pthread_mutex_t		*fork_left;
-	pthread_mutex_t		*last_eat_lock;
+	pthread_mutex_t		last_eat_lock;
+	pthread_mutex_t		*printlock;
+	pthread_mutex_t		*stoplock;
+	bool				*stop;
 }	t_philo;
-
-typedef struct envelope
-{
-	int					n_philosophers;
-	pthread_t			*threads;
-	pthread_t			monitor;
-	pthread_mutex_t		*forks;
-	pthread_mutex_t		*last_eat_locks;
-	t_global			global;
-	bool				mutex_init;
-	t_philo				*philo;
-	void				*(*philofunction)();
-}	t_envl;
 
 //0_main.c
 int		main(int argc, char **argv);
@@ -81,7 +83,7 @@ bool	check_input(int argc, char **argv);
 void	parse_input(t_envl *e, int argc, char **argv);
 
 //1_setup_2.c
-bool	init_envelopestruct(t_envl *e);
+bool	init_envelopestruct(t_envl *e, int argc, char **argv);
 bool	init_mutexes(t_envl *e);
 bool	init_philostructs(t_envl *e);
 time_t	calc_starttime(t_envl *e);

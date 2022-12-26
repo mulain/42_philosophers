@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:27 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/22 19:04:37 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/25 20:00:34 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ bool	launch_threads(t_envl *e)
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-		if (pthread_create(e->threads + i, NULL, e->philofunction,
+		if (pthread_create(&e->philo[i].thread, NULL, e->philofunction,
 				&e->philo[i]))
 			return (msg_exec_error(ERR_THREAD_CREATE, e), true);
 		i++;
@@ -63,7 +63,7 @@ bool	collect_threads(t_envl *e)
 	i = 0;
 	while (i < e->n_philosophers)
 	{
-		if (pthread_join(e->threads[i], NULL))
+		if (pthread_join(e->philo[i].thread, NULL))
 			return (msg_exec_error(ERR_THREAD_JOIN, e), true);
 		i++;
 	}
@@ -78,22 +78,16 @@ void	shutdown(t_envl *e)
 
 	if (e->mutex_init)
 	{
-		pthread_mutex_destroy(&e->global.printlock);
-		pthread_mutex_destroy(&e->global.stoplock);
+		pthread_mutex_destroy(&e->printlock);
+		pthread_mutex_destroy(&e->stoplock);
 		i = 0;
 		while (i < e->n_philosophers)
 		{
-			pthread_mutex_destroy(&e->forks[i]);
-			pthread_mutex_destroy(&e->last_eat_locks[i]);
+			pthread_mutex_destroy(&e->philo[i].fork);
+			pthread_mutex_destroy(&e->philo[i].last_eat_lock);
 			i++;
 		}
 	}
-	if (e->forks)
-		free(e->forks);
-	if (e->last_eat_locks)
-		free(e->last_eat_locks);
-	if (e->threads)
-		free(e->threads);
 	if (e->philo)
 		free(e->philo);
 }

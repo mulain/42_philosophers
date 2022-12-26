@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/22 18:21:17 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/25 20:14:46 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ bool	check_stopped(t_philo *p)
 {
 	bool	stopped;
 
-	pthread_mutex_lock(&p->global->stoplock);
-	stopped = p->global->stop;
-	pthread_mutex_unlock(&p->global->stoplock);
+	pthread_mutex_lock(p->stoplock);
+	stopped = *p->stop;
+	pthread_mutex_unlock(p->stoplock);
 	return (stopped);
 }
 
@@ -57,10 +57,10 @@ time_t	broadcast(char *msg, t_philo *p)
 {
 	time_t		now;
 
-	pthread_mutex_lock(&p->global->printlock);
+	pthread_mutex_lock(p->printlock);
 	now = get_time_ms();
 	if (!check_stopped(p))
-		printf("%li %i %s\n", now - p->global->starttime, p->id, msg);
-	pthread_mutex_unlock(&p->global->printlock);
+		printf("%li %i %s\n", now - p->starttime, p->id, msg);
+	pthread_mutex_unlock(p->printlock);
 	return (now);
 }

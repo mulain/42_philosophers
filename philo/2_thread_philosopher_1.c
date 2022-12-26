@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/24 13:01:07 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/25 20:46:06 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,15 @@ This results in there being 3 dining groups:
 void	*philosopher(void *arg)
 {
 	t_philo				*p;
-	//bool				stopped;
 
 	p = (t_philo *) arg;
 	if (p->id % 2 == 0)
 		switch_forks(p);
-	wait_timetarget(p->global->starttime, p);
+	wait_timetarget(p->starttime, p);
 	if (p->id % 2 == 0)
-		usleep(800);
-	if (p->id == 1)
-		usleep(200);
+		usleep(5000);
+	/* if (p->id == 1)
+		usleep(200); */
 	while (!check_stopped(p))
 		eat_sleep_think(p);
 	return (NULL);
@@ -71,18 +70,18 @@ void	eat_sleep_think(t_philo *p)
 		release_forks(p);
 		return ;
 	} */
-	pthread_mutex_lock(p->last_eat_lock);
+	pthread_mutex_lock(&p->last_eat_lock);
 	now = broadcast("is eating", p);
 	p->last_eat = now;
 	p->times_eaten++;
-	pthread_mutex_unlock(p->last_eat_lock);
-	wait_timetarget(now + p->global->time_to_eat, p);
+	pthread_mutex_unlock(&p->last_eat_lock);
+	wait_timetarget(now + p->time_to_eat, p);
 	now = broadcast("is sleeping", p);
 	release_forks(p);
-	if (wait_timetarget(now + p->global->time_to_sleep, p))
+	if (wait_timetarget(now + p->time_to_sleep, p))
 		return ;
 	now = broadcast("is thinking", p);
-	//wait_timetarget(now + calc_thinktime(p), p);
+	wait_timetarget(now + calc_thinktime(p), p);
 }
 
 /*
@@ -104,9 +103,9 @@ int	calc_thinktime(t_philo *p)
 {
 	int		time_to_think;
 
-	pthread_mutex_lock(p->last_eat_lock);
-	time_to_think = p->global->time_to_die - get_time_ms() + p->last_eat;
-	pthread_mutex_unlock(p->last_eat_lock);
+	pthread_mutex_lock(&p->last_eat_lock);
+	time_to_think = p->time_to_die - get_time_ms() + p->last_eat;
+	pthread_mutex_unlock(&p->last_eat_lock);
 	time_to_think *= 0.8;
 	return (time_to_think);
 }
@@ -135,7 +134,7 @@ void	*philosopher_solo(void *arg)
 	t_philo		*p;
 
 	p = (t_philo *) arg;
-	wait_timetarget(p->global->starttime, p);
+	wait_timetarget(p->starttime, p);
 	pthread_mutex_lock(p->fork_right);
 	broadcast("has taken a fork", p);
 	while (!check_stopped(p))

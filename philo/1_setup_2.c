@@ -6,52 +6,36 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/22 19:00:33 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/25 20:11:26 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-bool	init_envelopestruct(t_envl *e)
+bool	init_envelopestruct(t_envl *e, int argc, char **argv)
 {
-	e->threads = NULL;
-	e->forks = NULL;
-	e->mutex_init = false;
-	e->philo = NULL;
-	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
-	if (!e->threads)
+	e->n_philosophers = ft_atoi(argv[1]);
+	e->philo = malloc(e->n_philosophers * sizeof(t_philo));
+	if (!e->philo)
 		return (msg_exec_error(ERR_MALLOC, e), true);
-	e->global.starttime = calc_starttime(e);
-	e->global.stop = false;
+	e->mutex_init = false;
+	e->time_to_die = ft_atoi(argv[2]);
+	e->time_to_eat = ft_atoi(argv[3]);
+	e->time_to_sleep = ft_atoi(argv[4]);
+	if (argc == 6)
+		e->times_to_eat = ft_atoi(argv[5]);
+	else
+		e->times_to_eat = -1;
+	e->starttime = calc_starttime(e);
+	e->stop = false;
+	if (pthread_mutex_init(&e->printlock, NULL))
+		return (msg_exec_error(ERR_MUTEX_INIT, e), true);
+	if (pthread_mutex_init(&e->stoplock, NULL))
+		return (false);
 	if (e->n_philosophers == 1)
 		e->philofunction = philosopher_solo;
 	else
 		e->philofunction = philosopher;
-	return (false);
-}
-
-bool	init_mutexes(t_envl *e)
-{
-	int		i;
-	int		error;
-
-	error = 0;
-	e->forks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
-	e->last_eat_locks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
-	if (!e->forks || !e->last_eat_locks)
-		return (msg_exec_error(ERR_MALLOC, e), true);
-	i = 0;
-	while (i < e->n_philosophers)
-	{
-		error += pthread_mutex_init(&e->forks[i], NULL);
-		error += pthread_mutex_init(&e->last_eat_locks[i], NULL);
-		i++;
-	}
-	error += pthread_mutex_init(&e->global.printlock, NULL);
-	error += pthread_mutex_init(&e->global.stoplock, NULL);
-	if (error)
-		return (msg_exec_error(ERR_MUTEX_INIT, e), true);
-	e->mutex_init = true;
 	return (false);
 }
 
@@ -60,21 +44,27 @@ bool	init_philostructs(t_envl *e)
 	int		i;
 
 	i = 0;
-	e->philo = malloc(e->n_philosophers * sizeof(t_philo));
-	if (!e->philo)
-		return (msg_exec_error(ERR_MALLOC, e), true);
+
 	while (i < e->n_philosophers)
 	{
 		e->philo[i].id = i + 1;
-		e->philo[i].global = &e->global;
-		e->philo[i].fork_right = &e->forks[i];
-		if (i == 0)
-			e->philo[i].fork_left = &e->forks[e->n_philosophers - 1];
-		else
-			e->philo[i].fork_left = &e->forks[i - 1];
-		e->philo[i].last_eat = e->global.starttime;
-		e->philo[i].last_eat_lock = &e->last_eat_locks[i];
 		e->philo[i].times_eaten = 0;
+		e->philo[i].starttime = e->starttime;
+		e->philo[i].last_eat = e->starttime;
+		e->philo[i].time_to_die = e->time_to_die;
+		e->philo[i].time_to_eat = e->time_to_eat;
+		e->philo[i].time_to_sleep = e->time_to_sleep;
+		e->philo[i].times_to_eat = e->times_to_eat;
+		pthread_mutex_init(&e->philo[i].fork, NULL);
+		e->philo[i].fork_right = &e->philo[i].fork;
+		if (i == 0)
+			e->philo[i].fork_left = &e->philo[e->n_philosophers - 1].fork;
+		else
+			e->philo[i].fork_left = &e->philo[i - 1].fork;
+		pthread_mutex_init(&e->philo[i].last_eat_lock, NULL);
+		e->philo[i].printlock = &e->printlock;
+		e->philo[i].stoplock = &e->stoplock;
+		e->philo[i].stop = &e->stop;
 		i++;
 	}
 	return (false);
