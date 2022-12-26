@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 21:15:44 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/22 19:00:33 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ bool	init_envelopestruct(t_envl *e)
 	e->philo = NULL;
 	e->threads = malloc(e->n_philosophers * sizeof(pthread_t));
 	if (!e->threads)
-		return (exec_error_exit(ERR_MALLOC, e));
+		return (msg_exec_error(ERR_MALLOC, e), true);
 	e->global.starttime = calc_starttime(e);
 	e->global.stop = false;
 	if (e->n_philosophers == 1)
 		e->philofunction = philosopher_solo;
 	else
 		e->philofunction = philosopher;
-	return (true);
+	return (false);
 }
 
 bool	init_mutexes(t_envl *e)
@@ -39,7 +39,7 @@ bool	init_mutexes(t_envl *e)
 	e->forks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
 	e->last_eat_locks = malloc(e->n_philosophers * sizeof(pthread_mutex_t));
 	if (!e->forks || !e->last_eat_locks)
-		return (exec_error_exit(ERR_MALLOC, e));
+		return (msg_exec_error(ERR_MALLOC, e), true);
 	i = 0;
 	while (i < e->n_philosophers)
 	{
@@ -50,9 +50,9 @@ bool	init_mutexes(t_envl *e)
 	error += pthread_mutex_init(&e->global.printlock, NULL);
 	error += pthread_mutex_init(&e->global.stoplock, NULL);
 	if (error)
-		return (exec_error_exit(ERR_MUTEX_INIT, e));
+		return (msg_exec_error(ERR_MUTEX_INIT, e), true);
 	e->mutex_init = true;
-	return (true);
+	return (false);
 }
 
 bool	init_philostructs(t_envl *e)
@@ -62,7 +62,7 @@ bool	init_philostructs(t_envl *e)
 	i = 0;
 	e->philo = malloc(e->n_philosophers * sizeof(t_philo));
 	if (!e->philo)
-		return (exec_error_exit(ERR_MALLOC, e));
+		return (msg_exec_error(ERR_MALLOC, e), true);
 	while (i < e->n_philosophers)
 	{
 		e->philo[i].id = i + 1;
@@ -77,17 +77,17 @@ bool	init_philostructs(t_envl *e)
 		e->philo[i].times_eaten = 0;
 		i++;
 	}
-	return (true);
+	return (false);
 }
 
 time_t	calc_starttime(t_envl *e)
 {
 	int		offset;
 
-	offset = e->n_philosophers * 20;
-	if (offset > 1000)
-		offset = 1000;
-	if (offset < 100)
+	offset = e->n_philosophers * 50;
+	if (offset > 2000)
+		offset = 2000;
+	else if (offset < 100)
 		offset = 100;
 	return (get_time_ms() + offset);
 }

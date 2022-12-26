@@ -1,0 +1,7 @@
+-	check stopped
+	-	lock only for writing thread (monitor thread)?
+-	Mia has only one pointer layer in her stop monitor function
+	-	Maybe restructure datastruct?
+-	Pooneh: allocate "stupidly" is faster
+	-	Allocate closer to threads? In threads?
+	-	Allocate separately? Not separately?

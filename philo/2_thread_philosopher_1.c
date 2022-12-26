@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/09 15:46:29 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/24 13:01:07 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ This results in there being 3 dining groups:
 void	*philosopher(void *arg)
 {
 	t_philo				*p;
-	bool				stopped;
+	//bool				stopped;
 
 	p = (t_philo *) arg;
 	if (p->id % 2 == 0)
@@ -49,12 +49,8 @@ void	*philosopher(void *arg)
 		usleep(800);
 	if (p->id == 1)
 		usleep(200);
-	stopped = check_stopped(p);
-	while (!stopped)
-	{
+	while (!check_stopped(p))
 		eat_sleep_think(p);
-		stopped = check_stopped(p);
-	}
 	return (NULL);
 }
 
@@ -70,13 +66,13 @@ void	eat_sleep_think(t_philo *p)
 	time_t		now;
 
 	take_forks(p);
-	if (check_stopped(p))
+	/* if (check_stopped(p))
 	{
 		release_forks(p);
 		return ;
-	}
-	now = broadcast("is eating", p);
+	} */
 	pthread_mutex_lock(p->last_eat_lock);
+	now = broadcast("is eating", p);
 	p->last_eat = now;
 	p->times_eaten++;
 	pthread_mutex_unlock(p->last_eat_lock);
@@ -86,7 +82,7 @@ void	eat_sleep_think(t_philo *p)
 	if (wait_timetarget(now + p->global->time_to_sleep, p))
 		return ;
 	now = broadcast("is thinking", p);
-	wait_timetarget(now + calc_thinktime(p), p);
+	//wait_timetarget(now + calc_thinktime(p), p);
 }
 
 /*
@@ -121,15 +117,9 @@ Returns a bool whose value is based on whether the simulation has stopped.
 */
 bool	wait_timetarget(time_t timetarget, t_philo *p)
 {
-	bool	stopped;
-
-	stopped = check_stopped(p);
-	while (get_time_ms() < timetarget && !stopped)
-	{
+	while (get_time_ms() < timetarget && !check_stopped(p))
 		usleep(100);
-		stopped = check_stopped(p);
-	}
-	return (stopped);
+	return (check_stopped(p));
 }
 
 /*
@@ -143,17 +133,12 @@ should at least live his life as long as he can.
 void	*philosopher_solo(void *arg)
 {
 	t_philo		*p;
-	bool		stopped;
 
 	p = (t_philo *) arg;
 	wait_timetarget(p->global->starttime, p);
 	pthread_mutex_lock(p->fork_right);
 	broadcast("has taken a fork", p);
-	stopped = check_stopped(p);
-	while (!stopped)
-	{
+	while (!check_stopped(p))
 		usleep(100);
-		stopped = check_stopped(p);
-	}
 	return (NULL);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   8_errors.c                                         :+:      :+:    :+:   */
+/*   8_msg.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:32:22 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/11 15:58:35 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/22 19:02:06 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,15 @@ Return is necessary to terminate the main (exit not allowed).
 Storing write return in retval and voiding it to silence warnings
 when compiling with -O2 / -O3.
 */
-bool	input_error_exit(char *msg)
+void	msg_input_error(char *msg)
 {
 	int		retval;
 
 	retval = write (2, msg, ft_strlen(msg));
 	(void)retval;
-	return (false);
 }
 
-bool	input_error_philnumber_exit(char *msg)
+void	msg_input_error_philnumber(char *msg)
 {
 	int		retval;
 
@@ -36,17 +35,15 @@ bool	input_error_philnumber_exit(char *msg)
 	retval = write (2, MAX_PHILO, ft_strlen(MAX_PHILO));
 	retval = write (2, ".\n", 2);
 	(void)retval;
-	return (false);
 }
 
-bool	exec_error_exit(char *msg, t_envl *e)
+void	msg_exec_error(char *msg, t_envl *e)
 {
 	int		retval;
 
 	retval = write (2, msg, ft_strlen(msg));
 	(void)retval;
 	shutdown(e);
-	return (false);
 }
 
 int	ft_strlen(char *string)

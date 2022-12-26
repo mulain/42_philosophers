@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 21:16:06 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/22 18:57:56 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,10 @@ bool	check_death(t_envl *e, int i);
 bool	check_sated(t_envl *e, int i);
 void	set_stop(t_envl *e);
 
-//8_errors.c
-bool	input_error_exit(char *msg);
-bool	input_error_philnumber_exit(char *msg);
-bool	exec_error_exit(char *msg, t_envl *e);
+//8_msg.c
+void	msg_input_error(char *msg);
+void	msg_input_error_philnumber(char *msg);
+void	msg_exec_error(char *msg, t_envl *e);
 int		ft_strlen(char *string);
 
 #endif
