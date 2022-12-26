@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/26 20:08:39 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/26 20:09:39 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,6 @@ must be positive integers in int range or zero: >= 0 and < 2147483648.\n"
 # define ERR_THREAD_CREATE "Error: pthread_create\n"
 # define ERR_THREAD_JOIN "Error: pthread_join\n"
 
-typedef struct philosopher_thread	t_philo;
-typedef struct envelope
-{
-	int					n_philosophers;
-	t_philo				*philo;
-	pthread_t			monitor;
-	bool				mutex_init;
-	int					time_to_die;
-	int					time_to_eat;
-	int					time_to_sleep;
-	int					times_to_eat;
-	bool				stop;
-	time_t				starttime;
-	pthread_mutex_t		printlock;
-	pthread_mutex_t		stoplock;
-	void				*(*philofunction)();
-}	t_envl;
-
 typedef struct philosopher_thread
 {
 	pthread_t			thread;
@@ -69,6 +51,24 @@ typedef struct philosopher_thread
 	pthread_mutex_t		*stoplock;
 	bool				*stop;
 }	t_philo;
+
+typedef struct envelope
+{
+	int					n_philosophers;
+	t_philo				*philo;
+	pthread_t			monitor;
+	bool				mutex_init;
+	int					time_to_die;
+	int					time_to_eat;
+	int					time_to_sleep;
+	int					times_to_eat;
+	bool				stop;
+	time_t				starttime;
+	pthread_mutex_t		printlock;
+	pthread_mutex_t		stoplock;
+	void				*(*philofunction)();
+}	t_envl;
+
 
 //0_main.c
 int		main(int argc, char **argv);
