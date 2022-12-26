@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 11:11:57 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/25 20:11:26 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/26 20:07:13 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,8 @@ bool	init_philostructs(t_envl *e)
 {
 	int		i;
 
-	i = 0;
-
-	while (i < e->n_philosophers)
+	i = -1;
+	while (++i < e->n_philosophers)
 	{
 		e->philo[i].id = i + 1;
 		e->philo[i].times_eaten = 0;
@@ -56,16 +55,12 @@ bool	init_philostructs(t_envl *e)
 		e->philo[i].time_to_sleep = e->time_to_sleep;
 		e->philo[i].times_to_eat = e->times_to_eat;
 		pthread_mutex_init(&e->philo[i].fork, NULL);
-		e->philo[i].fork_right = &e->philo[i].fork;
-		if (i == 0)
-			e->philo[i].fork_left = &e->philo[e->n_philosophers - 1].fork;
-		else
-			e->philo[i].fork_left = &e->philo[i - 1].fork;
+		e->philo[i].fork_left = &e->philo[i].fork;
+		e->philo[i].fork_right = &e->philo[(i + 1) % e->n_philosophers].fork;
 		pthread_mutex_init(&e->philo[i].last_eat_lock, NULL);
 		e->philo[i].printlock = &e->printlock;
 		e->philo[i].stoplock = &e->stoplock;
 		e->philo[i].stop = &e->stop;
-		i++;
 	}
 	return (false);
 }
