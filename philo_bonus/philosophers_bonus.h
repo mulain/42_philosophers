@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 21:40:22 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 21:47:21 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ void	wait_timetarget(time_t timetarget);
 
 //5_semaphores.c
 void	open_semaphores_global(t_envl *e);
-void	unlink_semaphores(t_envl *e);
-void	close_semaphores(t_envl *e);
+void	unlink_semaphores_global(t_envl *e);
+void	close_semaphores_all(t_envl *e);
 void	open_semaphores_philo(t_envl *e);
 
 //6_utils_1.c

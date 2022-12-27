@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:52:34 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 21:38:51 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 21:49:15 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 
 /*
 It is good practice to unlink semaphores before opening them to
-make sure they are not used by a previous process. So start by unlinking,
-then opening in main.
+make sure they are not used by a previous process (however unlikely).
+It is also good practice to immediately unlink them again if no separate
+processes need them as they stay open for those processes, that already
+have them open. This also applies to children that inherit the open sems
+from the parent.
 Flags: O_CREAT for create semaphore, O_EXCL makes sem_open return an error
 if the semaphore to be created already exists. Highly unlikely since we
 closed them before and named them specifically, but apparently still good
@@ -33,25 +36,23 @@ practice.
 */
 void	open_semaphores_global(t_envl *e)
 {
+	unlink_semaphores(e);
 	e->eaten_enough = sem_open("/eaten_enough", O_CREAT | O_EXCL, 0644, 0);
 	if (e->eaten_enough == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
-	sem_unlink("/eaten_enough");
 	e->print = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
 	if (e->print == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
-	sem_unlink("/print");
 	e->stop_sim = sem_open("/stop", O_CREAT | O_EXCL, 0644, 0);
 	if (e->stop_sim == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
-	sem_unlink("/stop");
 	e->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, e->n_philosophers);
 	if (e->forks == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
-	sem_unlink("/forks");
+	unlink_semaphores(e);
 }
 
-void	unlink_semaphores(t_envl *e)
+void	unlink_semaphores_global(t_envl *e)
 {
 	(void)e;
 	sem_unlink("/eaten_enough");
@@ -60,7 +61,7 @@ void	unlink_semaphores(t_envl *e)
 	sem_unlink("/forks");
 }
 
-void	close_semaphores(t_envl *e)
+void	close_semaphores_all(t_envl *e)
 {
 	int		i;
 
@@ -86,6 +87,8 @@ open its own semaphore to the struct var e.lasteatlock. But those sems
 actually all had the same address across the processes. I do not understand
 why that happened -  I thought each process would have its own heap and
 stack therefore would not open the sems at the same address.
+I changed to this to try to speed things up (I thought all processes might be
+using the same sem!). Not sure if this actually is the case tho.
 */
 void	open_semaphores_philo(t_envl *e)
 {
@@ -99,6 +102,7 @@ void	open_semaphores_philo(t_envl *e)
 		id_char = zero_or_pos_itoa(i + 1);
 		semname = ft_strjoin("/eat", id_char);
 		free(id_char);
+		sem_unlink(semname);
 		e->eat_locks[i] = sem_open(semname, O_CREAT | O_EXCL, 0644, 1);
 		sem_unlink(semname);
 		free(semname);

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 21:29:23 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 21:45:32 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	setup(t_envl *e, int argc, char **argv)
 {
 	check_input(argc, argv);
 	init_envelopestruct(e, argc, argv);
-	unlink_semaphores(e);
 	open_semaphores_global(e);
+	open_semaphores_philo(e);
 }
 
 void	check_input(int argc, char **argv)
@@ -65,7 +65,6 @@ void	init_envelopestruct(t_envl *e, int argc, char **argv)
 	e->eat_locks = malloc((e->n_philosophers) * sizeof(sem_t *));
 	if (!e->eat_locks)
 		exec_error_exit(ERR_MALLOC, e);
-	open_semaphores_philo(e);
 }
 
 time_t	calc_starttime(t_envl *e)
