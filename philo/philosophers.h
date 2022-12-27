@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 12:46:11 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 12:47:11 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,14 @@ bool	collect_threads(t_envl *e);
 void	shutdown(t_envl *e);
 time_t	get_time_ms(void);
 
-//1_setup_1.c
+//1_setup.c
 bool	setup(t_envl *e, int argc, char **argv);
 bool	check_input(int argc, char **argv);
-void	parse_input(t_envl *e, int argc, char **argv);
-
-//1_setup_2.c
 bool	init_envelopestruct(t_envl *e, int argc, char **argv);
-bool	init_mutexes(t_envl *e);
 bool	init_philostructs(t_envl *e);
 time_t	calc_starttime(t_envl *e);
 
-//1_setup_3.c
+//1_setup_util.c
 int		is_one_to_maxphilo(char *input);
 int		is_digits(char *input);
 int		is_intsize(char *argv);
