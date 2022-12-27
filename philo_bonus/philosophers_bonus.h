@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/12 19:13:27 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 15:53:05 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,12 @@ typedef struct envelope
 
 //0_main_1.c
 int		main(int argc, char **argv);
-void	launch_philoforks(t_envl *e);
-void	launch_monitorthreads(t_envl *e);
-void	wait_children(t_envl *e);
-void	join_threads(t_envl *e);
-
-//0_main_2.c
+void	launch_subentities(t_envl *e);
+void	land_subentities(t_envl *e);
 void	*eatmonitor(void *arg);
 void	*stopmonitor(void *arg);
+
+//0_main_2.c
 time_t	get_time_ms(void);
 
 //1_setup.c
@@ -80,17 +78,16 @@ time_t	calc_starttime(t_envl *e);
 
 //2_process_philosopher_1.c
 void	philosopher(t_envl *e);
-void	copy_struct(t_envl *source, t_envl *dest);
 void	open_semaphore_philo(t_envl *e);
 void	*monitor(void *arg);
 void	eat_sleep_think(t_envl *e);
 int		calc_thinktime(t_envl *e);
-void	wait_timetarget(time_t timetarget);
 
 //2_process_philosopher_2.c
 void	take_forks(t_envl *e);
 void	release_forks(t_envl *e);
 time_t	broadcast(char *msg, t_envl *e);
+void	wait_timetarget(time_t timetarget);
 
 //5_semaphores.c
 void	open_semaphores_global(t_envl *e);

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 13:00:23 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 13:18:32 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,46 +19,20 @@ philo) controls the interaction of the eat_sleep_think loop with the monitor
 thread. There is no thread_join function because the philos will run
 indefinitely or until killed.
 */
-void	philosopher(t_envl *e_orig)
+void	philosopher(t_envl *e)
 {
 	pthread_t		monitor_id;
-	t_envl			e;
 
-	copy_struct(e_orig, &e);
-	open_semaphore_philo(&e);
-	if (pthread_create(&monitor_id, NULL, monitor, &e))
-		exec_error_exit(ERR_THREAD_CREATE, &e);
-	wait_timetarget(e.starttime);
-	if (e.id % 2 == 0)
+	open_semaphore_philo(e);
+	if (pthread_create(&monitor_id, NULL, monitor, e))
+		exec_error_exit(ERR_THREAD_CREATE, e);
+	wait_timetarget(e->starttime);
+	if (e->id % 2 == 0)
 		usleep(800);
-	if (e.id == 1)
-		usleep(200);
+	/* if (e->id == 1)
+		usleep(200); */
 	while (1)
-		eat_sleep_think(&e);
-}
-
-/*
-Test to see if fork's copy on write functionality is the cause of philo deaths.
-*/
-void	copy_struct(t_envl *source, t_envl *dest)
-{
-	dest->n_philosophers = source->n_philosophers;
-	dest->time_to_die = source->time_to_die;
-	dest->time_to_eat = source->time_to_eat;
-	dest->time_to_sleep = source->time_to_sleep;
-	dest->times_to_eat = source->times_to_eat;
-	dest->id = source->id;
-	dest->starttime = source->starttime;
-	dest->last_eat = source->last_eat;
-	dest->times_eaten = source->times_eaten;
-	dest->pids = source->pids;
-	dest->eatmonitor = source->eatmonitor;
-	dest->stopmonitor = source->stopmonitor;
-	dest->eatdata_lock = source->eatdata_lock;
-	dest->eaten_enough = source->eaten_enough;
-	dest->print = source->print;
-	dest->stop_sim = source->stop_sim;
-	dest->forks = source->forks;
+		eat_sleep_think(e);
 }
 
 /*
@@ -153,12 +127,3 @@ int	calc_thinktime(t_envl *e)
 	return (time_to_think);
 }
 
-/*
-Child Processes don't have to check for the simulation being stopped because they
-will be killed by main process. So they just wait for time_target.
-*/
-void	wait_timetarget(time_t timetarget)
-{
-	while (get_time_ms() < timetarget)
-		usleep(100);
-}

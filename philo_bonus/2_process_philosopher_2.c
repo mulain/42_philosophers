@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 12:59:59 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 13:11:51 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,14 @@ time_t	broadcast(char *msg, t_envl *e)
 	printf("%li %i %s\n", now - e->starttime, e->id, msg);
 	sem_post(e->print);
 	return (now);
+}
+
+/*
+Child Processes don't have to check for the simulation being stopped because they
+will be killed by main process. So they just wait for time_target.
+*/
+void	wait_timetarget(time_t timetarget)
+{
+	while (get_time_ms() < timetarget)
+		usleep(100);
 }
