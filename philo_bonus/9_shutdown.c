@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:33:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 21:04:10 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 21:55:40 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 void	shutdown(t_envl *e)
 {
 	kill_children(e);
-	close_semaphores(e);
-	unlink_semaphores(e);
+	close_semaphores_all(e);
 	if (e->pids)
 		free(e->pids);
 	if (e->eat_locks)

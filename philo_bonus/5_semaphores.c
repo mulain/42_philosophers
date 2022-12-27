@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:52:34 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 21:49:15 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 21:56:38 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ practice.
 */
 void	open_semaphores_global(t_envl *e)
 {
-	unlink_semaphores(e);
+	unlink_semaphores_global(e);
 	e->eaten_enough = sem_open("/eaten_enough", O_CREAT | O_EXCL, 0644, 0);
 	if (e->eaten_enough == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
@@ -49,7 +49,7 @@ void	open_semaphores_global(t_envl *e)
 	e->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, e->n_philosophers);
 	if (e->forks == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
-	unlink_semaphores(e);
+	unlink_semaphores_global(e);
 }
 
 void	unlink_semaphores_global(t_envl *e)
@@ -88,7 +88,12 @@ actually all had the same address across the processes. I do not understand
 why that happened -  I thought each process would have its own heap and
 stack therefore would not open the sems at the same address.
 I changed to this to try to speed things up (I thought all processes might be
-using the same sem!). Not sure if this actually is the case tho.
+using the same sem!). Not 100 % sure if this is actually the case but now
+things are way faster (philo 200 950 200 200 was neede before, now
+philo 200 430 200 200 is ok). Also changed the factor for time to think
+but I tested it also with old semaphore version. So it is currently my best
+explanation that the processes were sharing the same eatlock semaphore and that
+was slowing things down.
 */
 void	open_semaphores_philo(t_envl *e)
 {
