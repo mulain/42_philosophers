@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 13:18:32 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 21:39:51 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,13 @@ indefinitely or until killed.
 */
 void	philosopher(t_envl *e)
 {
-	pthread_t		monitor_id;
+	pthread_t	monitor_id;
 
-	open_semaphore_philo(e);
 	if (pthread_create(&monitor_id, NULL, monitor, e))
 		exec_error_exit(ERR_THREAD_CREATE, e);
 	wait_timetarget(e->starttime);
 	if (e->id % 2 == 0)
-		usleep(800);
-	/* if (e->id == 1)
-		usleep(200); */
+		wait_timetarget(e->starttime + calc_thinktime(e));
 	while (1)
 		eat_sleep_think(e);
 }
@@ -42,18 +39,19 @@ zero_or_pos_itoa is a streamlined version of itoa to convert e.id to alpha.
 Immediately unlinks because no other processes need the semaphore and it
 stays open for those processes that already have it.
 */
-void	open_semaphore_philo(t_envl *e)
+void	sdfdsopen_semaphore_philo(t_envl *e, int id, sem_t **eatdata_lock)
 {
 	char	*semname;
-	char	*id;
+	char	*id_char;
 
-	id = zero_or_pos_itoa(e->id);
-	semname = ft_strjoin("/eat", id);
-	free(id);
-	e->eatdata_lock = sem_open(semname, O_CREAT | O_EXCL, 0644, 1);
+	id_char = zero_or_pos_itoa(id);
+	semname = ft_strjoin("/eat", id_char);
+	free(id_char);
+	*eatdata_lock = sem_open(semname, O_CREAT | O_EXCL, 0644, 1);
 	sem_unlink(semname);
+	printf("semname:%s\naddress eatdata_lock:%p\n", semname, *eatdata_lock);
 	free(semname);
-	if (e->eatdata_lock == SEM_FAILED)
+	if (*eatdata_lock == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);
 }
 
@@ -76,14 +74,14 @@ void	*monitor(void *arg)
 	e = (t_envl *)arg;
 	while (1)
 	{
-		sem_wait(e->eatdata_lock);
+		sem_wait(e->eat_locks[e->id - 1]);
 		if (get_time_ms() - e->last_eat > e->time_to_die)
 		{
 			sem_wait(e->print);
 			printf("%li %i died\n", get_time_ms() - e->starttime, e->id);
 			sem_post(e->stop_sim);
 		}
-		sem_post(e->eatdata_lock);
+		sem_post(e->eat_locks[e->id - 1]);
 		usleep(1000);
 	}
 }
@@ -102,9 +100,9 @@ void	eat_sleep_think(t_envl *e)
 
 	take_forks(e);
 	now = broadcast("is eating", e);
-	sem_wait(e->eatdata_lock);
+	sem_wait(e->eat_locks[e->id - 1]);
 	e->last_eat = now;
-	sem_post(e->eatdata_lock);
+	sem_post(e->eat_locks[e->id - 1]);
 	e->times_eaten++;
 	if (e->times_eaten == e->times_to_eat)
 		sem_post(e->eaten_enough);
@@ -116,14 +114,18 @@ void	eat_sleep_think(t_envl *e)
 	wait_timetarget(now + calc_thinktime(e));
 }
 
+/*
+Time to think is empirically selected to be able to handle 200 philos on my
+personal machine. Maybe an algorithmic solution would be better, but I don't
+want to invest more time in this project any more.
+*/
 int	calc_thinktime(t_envl *e)
 {
 	int		time_to_think;
 
-	sem_wait(e->eatdata_lock);
+	sem_wait(e->eat_locks[e->id - 1]);
 	time_to_think = e->time_to_die - get_time_ms() + e->last_eat;
-	sem_post(e->eatdata_lock);
-	time_to_think *= 0.8;
+	sem_post(e->eat_locks[e->id - 1]);
+	time_to_think *= 0.4;
 	return (time_to_think);
 }
-

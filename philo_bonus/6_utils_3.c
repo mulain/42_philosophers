@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   6_utils_2.c                                        :+:      :+:    :+:   */
+/*   6_utils_3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 10:13:51 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/06 19:05:01 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 16:14:49 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,12 @@ char	*ft_strdup(char *s)
 		return (NULL);
 	ft_strlcpy(c, s, i);
 	return (c);
+}
+
+time_t	get_time_ms(void)
+{
+	struct timeval		time;
+
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }

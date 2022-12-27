@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:33:45 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 12:59:31 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 21:04:10 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	shutdown(t_envl *e)
 	unlink_semaphores(e);
 	if (e->pids)
 		free(e->pids);
+	if (e->eat_locks)
+		free(e->eat_locks);
 }
 
 void	kill_children(t_envl *e)

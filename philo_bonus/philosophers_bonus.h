@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 15:53:05 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 21:40:22 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,28 +57,25 @@ typedef struct envelope
 	sem_t		*print;
 	sem_t		*stop_sim;
 	sem_t		*forks;
+	sem_t		**eat_locks;
 }	t_envl;
 
-//0_main_1.c
+//0_main.c
 int		main(int argc, char **argv);
 void	launch_subentities(t_envl *e);
 void	land_subentities(t_envl *e);
 void	*eatmonitor(void *arg);
 void	*stopmonitor(void *arg);
 
-//0_main_2.c
-time_t	get_time_ms(void);
-
 //1_setup.c
 void	setup(t_envl *e, int argc, char **argv);
 void	check_input(int argc, char **argv);
-void	parse_input(t_envl *e, int argc, char **argv);
-void	init_envelopestruct(t_envl *e);
+void	init_envelopestruct(t_envl *e, int argc, char **argv);
 time_t	calc_starttime(t_envl *e);
 
 //2_process_philosopher_1.c
 void	philosopher(t_envl *e);
-void	open_semaphore_philo(t_envl *e);
+void	open_semaphore_philo(t_envl *e, int id, sem_t **eatdata_lock);
 void	*monitor(void *arg);
 void	eat_sleep_think(t_envl *e);
 int		calc_thinktime(t_envl *e);
@@ -91,9 +88,9 @@ void	wait_timetarget(time_t timetarget);
 
 //5_semaphores.c
 void	open_semaphores_global(t_envl *e);
-void	open_semaphores(t_envl *e);
 void	unlink_semaphores(t_envl *e);
 void	close_semaphores(t_envl *e);
+void	open_semaphores_philo(t_envl *e);
 
 //6_utils_1.c
 int		is_one_to_maxphilo(char *input);
@@ -112,6 +109,7 @@ int		ft_strlen(char *string);
 //6_utils_3.c
 char	*zero_or_pos_itoa(int n);
 char	*ft_strdup(char *s);
+time_t	get_time_ms(void);
 
 //8_errors.c
 void	input_error_exit(char *msg);
