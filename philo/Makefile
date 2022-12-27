@@ -6,7 +6,7 @@
 #    By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/02 17:30:04 by wmardin           #+#    #+#              #
-#    Updated: 2022/12/26 18:11:48 by wmardin          ###   ########.fr        #
+#    Updated: 2022/12/27 12:41:56 by wmardin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,8 @@ DEFINE =
 
 NAME =	philo
 SRC =	0_main.c\
-		1_setup_1.c\
-		1_setup_2.c\
-		1_setup_3.c\
+		1_setup.c\
+		1_setup_util.c\
 		2_thread_philosopher_1.c\
 		2_thread_philosopher_2.c\
 		3_thread_monitor.c\
