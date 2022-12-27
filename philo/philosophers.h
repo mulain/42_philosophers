@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/26 20:09:39 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 12:28:04 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ typedef struct envelope
 	pthread_mutex_t		stoplock;
 	void				*(*philofunction)();
 }	t_envl;
-
 
 //0_main.c
 int		main(int argc, char **argv);
