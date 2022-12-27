@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 12:28:04 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 12:46:11 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ typedef struct envelope
 	int					n_philosophers;
 	t_philo				*philo;
 	pthread_t			monitor;
-	bool				mutex_init;
 	int					time_to_die;
 	int					time_to_eat;
 	int					time_to_sleep;

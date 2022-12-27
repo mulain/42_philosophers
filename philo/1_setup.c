@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:05:12 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 12:28:42 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 12:46:21 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ bool	init_envelopestruct(t_envl *e, int argc, char **argv)
 	e->philo = malloc(e->n_philosophers * sizeof(t_philo));
 	if (!e->philo)
 		return (msg_exec_error(ERR_MALLOC, e), true);
-	e->mutex_init = false;
 	e->time_to_die = ft_atoi(argv[2]);
 	e->time_to_eat = ft_atoi(argv[3]);
 	e->time_to_sleep = ft_atoi(argv[4]);
