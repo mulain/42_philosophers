@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:52:34 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/11 20:01:56 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 12:57:44 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	open_semaphores_global(t_envl *e)
 {
 	e->eaten_enough = sem_open("/eaten_enough", O_CREAT | O_EXCL, 0644, 0);
 	if (e->eaten_enough == SEM_FAILED)
-		exec_error_exit("knudel\n", e);
+		exec_error_exit(ERR_SEM_OPEN, e);
 	e->print = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
 	if (e->print == SEM_FAILED)
 		exec_error_exit(ERR_SEM_OPEN, e);

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/12 12:54:26 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 13:00:23 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,9 +128,9 @@ void	eat_sleep_think(t_envl *e)
 
 	take_forks(e);
 	now = broadcast("is eating", e);
-	//sem_wait(e->eatdata_lock);
+	sem_wait(e->eatdata_lock);
 	e->last_eat = now;
-	//sem_post(e->eatdata_lock);
+	sem_post(e->eatdata_lock);
 	e->times_eaten++;
 	if (e->times_eaten == e->times_to_eat)
 		sem_post(e->eaten_enough);
@@ -139,16 +139,16 @@ void	eat_sleep_think(t_envl *e)
 	release_forks(e);
 	wait_timetarget(now + e->time_to_sleep);
 	now = broadcast("is thinking", e);
-	//wait_timetarget(now + calc_thinktime(e));
+	wait_timetarget(now + calc_thinktime(e));
 }
 
 int	calc_thinktime(t_envl *e)
 {
 	int		time_to_think;
 
-	//sem_wait(e->eatdata_lock);
+	sem_wait(e->eatdata_lock);
 	time_to_think = e->time_to_die - get_time_ms() + e->last_eat;
-	//sem_post(e->eatdata_lock);
+	sem_post(e->eatdata_lock);
 	time_to_think *= 0.8;
 	return (time_to_think);
 }

@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/11/12 10:49:37 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/27 12:59:59 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ time_t	broadcast(char *msg, t_envl *e)
 {
 	time_t		now;
 
-	//sem_wait(e->print);
+	sem_wait(e->print);
 	now = get_time_ms();
 	printf("%li %i %s\n", now - e->starttime, e->id, msg);
-	//sem_post(e->print);
+	sem_post(e->print);
 	return (now);
 }
