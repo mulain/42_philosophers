@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/26 18:33:49 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/28 23:30:37 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ This results in there being 3 dining groups:
 */
 void	*philosopher(void *arg)
 {
-	t_philo				*p;
+	t_philo		*p;
 
 	p = (t_philo *) arg;
 	if (p->id % 2 == 0)
@@ -46,8 +46,6 @@ void	*philosopher(void *arg)
 	wait_timetarget(p->starttime, p);
 	if (p->id % 2 == 0)
 		usleep(5000);
-	if (p->id == 1)
-		usleep(200);
 	while (!check_stopped(p))
 		eat_sleep_think(p);
 	return (NULL);
