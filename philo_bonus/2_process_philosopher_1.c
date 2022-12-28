@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 08:07:36 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 21:39:51 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/28 23:41:12 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,29 +30,6 @@ void	philosopher(t_envl *e)
 		wait_timetarget(e->starttime + calc_thinktime(e));
 	while (1)
 		eat_sleep_think(e);
-}
-
-/*
-Uses str_join to give a unique name since we cannot use
-sem_init - which would allow to declare non shared semaphores.
-zero_or_pos_itoa is a streamlined version of itoa to convert e.id to alpha.
-Immediately unlinks because no other processes need the semaphore and it
-stays open for those processes that already have it.
-*/
-void	sdfdsopen_semaphore_philo(t_envl *e, int id, sem_t **eatdata_lock)
-{
-	char	*semname;
-	char	*id_char;
-
-	id_char = zero_or_pos_itoa(id);
-	semname = ft_strjoin("/eat", id_char);
-	free(id_char);
-	*eatdata_lock = sem_open(semname, O_CREAT | O_EXCL, 0644, 1);
-	sem_unlink(semname);
-	printf("semname:%s\naddress eatdata_lock:%p\n", semname, *eatdata_lock);
-	free(semname);
-	if (*eatdata_lock == SEM_FAILED)
-		exec_error_exit(ERR_SEM_OPEN, e);
 }
 
 /*
@@ -116,8 +93,8 @@ void	eat_sleep_think(t_envl *e)
 
 /*
 Time to think is empirically selected to be able to handle 200 philos on my
-personal machine. Maybe an algorithmic solution would be better, but I don't
-want to invest more time in this project any more.
+machine and the school machines.
+An algorithmic solution would be better, but I want to submit now.
 */
 int	calc_thinktime(t_envl *e)
 {

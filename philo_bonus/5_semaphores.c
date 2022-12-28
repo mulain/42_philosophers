@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 08:52:34 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 21:56:38 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/28 23:45:32 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 /*
 It is good practice to unlink semaphores before opening them to
 make sure they are not used by a previous process (however unlikely).
-It is also good practice to immediately unlink them again if no separate
-processes need them as they stay open for those processes, that already
-have them open. This also applies to children that inherit the open sems
-from the parent.
+It is also good practice to immediately unlink them again after
+opening them if no separate processes need them as they stay open for
+those processes that already have them open.
+This also applies to children that inherit the open sems from the parent.
 Flags: O_CREAT for create semaphore, O_EXCL makes sem_open return an error
 if the semaphore to be created already exists. Highly unlikely since we
 closed them before and named them specifically, but apparently still good
 practice.
 -	eaten_enough is a resource semaphore that starts at 0 and gets posted to
-	when a philosopher has eaten enough times. At that point the main
+	when a philosopher has eaten enough times. The eatmonitor in the main
 	process, that has been waiting for eaten_enough to reach n_philosopher,
-	terminates the simulation
+	terminates the simulation when all philos have posted.
 -	print is a binary semaphore that controls access to the broadcast function.
 	This is to not mix up timestamps - an issue that exists on my system (Win 11
 	WSL 2 Ubuntu), but apparently not on school iMacs.
@@ -87,10 +87,11 @@ open its own semaphore to the struct var e.lasteatlock. But those sems
 actually all had the same address across the processes. I do not understand
 why that happened -  I thought each process would have its own heap and
 stack therefore would not open the sems at the same address.
-I changed to this to try to speed things up (I thought all processes might be
-using the same sem!). Not 100 % sure if this is actually the case but now
-things are way faster (philo 200 950 200 200 was neede before, now
-philo 200 430 200 200 is ok). Also changed the factor for time to think
+I changed to opening the sems in an array and before forking to
+to try to speed things up (I think all processes might have been
+using the same sem!). Not 100 % sure if this was actually the case but now
+things are way faster (philo 200 950(!) 200 200 was needed before, now
+philo 200 430 200 200 is ok). Also changed the factor for time_to_think
 but I tested it also with old semaphore version. So it is currently my best
 explanation that the processes were sharing the same eatlock semaphore and that
 was slowing things down.

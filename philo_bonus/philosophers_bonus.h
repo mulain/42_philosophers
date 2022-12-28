@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:59:59 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/27 21:47:21 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/28 23:28:32 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef struct envelope
 	pid_t		*pids;
 	pthread_t	eatmonitor;
 	pthread_t	stopmonitor;
-	sem_t		*eatdata_lock;
 	sem_t		*eaten_enough;
 	sem_t		*print;
 	sem_t		*stop_sim;
@@ -75,7 +74,6 @@ time_t	calc_starttime(t_envl *e);
 
 //2_process_philosopher_1.c
 void	philosopher(t_envl *e);
-void	open_semaphore_philo(t_envl *e, int id, sem_t **eatdata_lock);
 void	*monitor(void *arg);
 void	eat_sleep_think(t_envl *e);
 int		calc_thinktime(t_envl *e);
