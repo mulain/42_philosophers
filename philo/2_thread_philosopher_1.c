@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/28 23:30:37 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/28 23:33:59 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,15 @@ void	eat_sleep_think(t_philo *p)
 
 /*
 The remaining time is <time_to_die> - <time elapsed since last meal>
-(= current_time - last_eat). Philosophers will think for 90 % of that time to
-not block other philosophers from getting forks. Empirically, this seems to
-only be relevant in case of uneven number of philosophers.
+(= current_time - last_eat). Philosophers will think for a percentage
+of that time to not block other philosophers from getting forks.
+Empirically, this seems to only be relevant in case of uneven number
+of philosophers.
 If remaining_time drops below 1 ms, time_to_think is set to 0 (int division).
-This is accepted in order to give a safety margin.
 
 Potential negative values of <time_to_think> aren't a problem as
 wait_time_target will immediately terminate (and also the simulation likely
 has already stopped due to a death).
-
-printf("remaining time:%i\n", remaining_time);
-printf("thinktime:%i\n", time_to_think);
 */
 int	calc_thinktime(t_philo *p)
 {
