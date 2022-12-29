@@ -6,7 +6,7 @@
 /*   By: wmardin <wmardin@student.42wolfsburg.de>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 22:06:50 by wmardin           #+#    #+#             */
-/*   Updated: 2022/12/28 23:33:59 by wmardin          ###   ########.fr       */
+/*   Updated: 2022/12/29 07:04:56 by wmardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ The remaining time is <time_to_die> - <time elapsed since last meal>
 of that time to not block other philosophers from getting forks.
 Empirically, this seems to only be relevant in case of uneven number
 of philosophers.
-If remaining_time drops below 1 ms, time_to_think is set to 0 (int division).
 
 Potential negative values of <time_to_think> aren't a problem as
 wait_time_target will immediately terminate (and also the simulation likely
