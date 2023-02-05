@@ -14,7 +14,7 @@
 
 /*
 Mandatory part of the project doesn't allow function exit, so the various parts
-of the main have a return to stop execution of the main.
+of the main have a return to stop execution.
 
 General points:
 - 	For philosphers not to die, <time_to_die> has to be > 2 x <time_to_eat>
